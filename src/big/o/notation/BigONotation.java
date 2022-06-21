@@ -6,7 +6,7 @@ public class BigONotation {
      * Linear Time algorithm
      * */
     public void linearTimeAlgorithm(int n) {
-        
+
         for (int i = 0; i < n; i++) {
             System.out.println("Hey - I'm busy looking at: " + i);
             System.out.println("Hmm.. Let's have another look at: " + i);
