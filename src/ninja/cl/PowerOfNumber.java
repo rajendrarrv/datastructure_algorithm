@@ -1,4 +1,4 @@
-package ninja;
+package ninja.cl;
 
 public class PowerOfNumber {
     public int powerOfNumber(int num, int pow) {

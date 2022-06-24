@@ -1,4 +1,4 @@
-package ninja;
+package ninja.cl;
 
 import static utils.MathUtils.percentage;
 import static utils.MathUtils.roundOff;

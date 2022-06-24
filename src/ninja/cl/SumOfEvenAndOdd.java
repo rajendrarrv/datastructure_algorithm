@@ -1,4 +1,4 @@
-package ninja;
+package ninja.cl;
 
 public class SumOfEvenAndOdd {
 
