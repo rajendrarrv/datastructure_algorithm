@@ -2,7 +2,7 @@ package utils;
 
 public class MathUtils {
     public static double roundOff(double v, int i) {
-        double base  = Math.pow(10,2);
+        double base  = Math.pow(10,i);
         return Math.round(v*base)/base;
     }
 
