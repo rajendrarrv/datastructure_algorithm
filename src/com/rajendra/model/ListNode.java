@@ -3,12 +3,16 @@ package com.rajendra.model;
 /**
  * Created by Rajendra Verma on 27/08/22.
  */
-public class ListNode extends  Node {
+public class ListNode  {
+    public int value;
+    public ListNode next;
+
     public ListNode(int value) {
-        super(value);
+        this.value = value;
     }
 
-    public ListNode(int value, Node next) {
-        super(value, next);
+    public ListNode(int value, ListNode next) {
+        this.value = value;
+        this.next = next;
     }
 }

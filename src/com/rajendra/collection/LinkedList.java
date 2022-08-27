@@ -4,13 +4,14 @@ import com.rajendra.model.ListNode;
 import com.rajendra.model.Node;
 
 /**
+ * kunal class
  * Created by Rajendra Verma on 27/08/22.
  */
 public class LinkedList {
 
-    protected Node head;
-    protected Node tail;
-    protected int size;
+    public Node head;
+    public Node tail;
+    public int size;
 
     public LinkedList() {
         this.size = 0;
@@ -64,7 +65,7 @@ public class LinkedList {
         head = insertRec(val, index, head);
     }
 
-    private Node insertRec(int val, int index, Node node) {
+    public Node insertRec(int val, int index, Node node) {
         if (index == 0) {
             Node temp = new Node(val, node);
             size++;
@@ -144,7 +145,6 @@ public class LinkedList {
     }
 
 
-
     // https://leetcode.com/problems/remove-duplicates-from-sorted-list
     public void duplicates() {
         Node node = head;
@@ -162,7 +162,7 @@ public class LinkedList {
     }
 
     // https://leetcode.com/problems/merge-two-sorted-lists/submissions/
-    public static LinkedList merge(LinkedList first, LinkedList second) {
+    public LinkedList merge(LinkedList first, LinkedList second) {
         Node f = first.head;
         Node s = second.head;
 
@@ -267,5 +267,34 @@ public class LinkedList {
         }
         head = prev;
     }
+
+//     linked list cycle related question
+
+    public boolean hasCycle(ListNode node) {
+        return false;
+    }
+
+    public int lengthCycle(ListNode node) {
+        return 0;
+    }
+
+    public ListNode detectCycle(ListNode node) {
+
+        return null;
+    }
+
+    //     happy number
+    public boolean isHappyNumber(int num) {
+        return false;
+    }
+//    middleOf linkedlist
+
+    public ListNode middleNode(ListNode head) {
+
+        return null;
+
+    }
+
+
 
 }
