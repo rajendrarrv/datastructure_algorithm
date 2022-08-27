@@ -1,7 +1,6 @@
 package com.rajendra.collection;
 
 import com.rajendra.model.ListNode;
-import com.rajendra.model.Node;
 
 /**
  * kunal class
@@ -9,8 +8,8 @@ import com.rajendra.model.Node;
  */
 public class LinkedList {
 
-    public Node head;
-    public Node tail;
+    public ListNode head;
+    public ListNode tail;
     public int size;
 
     public LinkedList() {
@@ -18,7 +17,7 @@ public class LinkedList {
     }
 
     public void insertFirst(int val) {
-        Node node = new Node(val);
+        ListNode node = new ListNode(val);
         node.next = head;
         head = node;
 
@@ -33,7 +32,7 @@ public class LinkedList {
             insertFirst(val);
             return;
         }
-        Node node = new Node(val);
+        ListNode node = new ListNode(val);
         tail.next = node;
         tail = node;
         size++;
@@ -49,12 +48,12 @@ public class LinkedList {
             return;
         }
 
-        Node temp = head;
+        ListNode temp = head;
         for (int i = 1; i < index; i++) {
             temp = temp.next;
         }
 
-        Node node = new Node(val, temp.next);
+        ListNode node = new ListNode(val, temp.next);
         temp.next = node;
 
         size++;
@@ -65,9 +64,9 @@ public class LinkedList {
         head = insertRec(val, index, head);
     }
 
-    public Node insertRec(int val, int index, Node node) {
+    public ListNode insertRec(int val, int index, ListNode node) {
         if (index == 0) {
-            Node temp = new Node(val, node);
+            ListNode temp = new ListNode(val, node);
             size++;
             return temp;
         }
@@ -82,7 +81,7 @@ public class LinkedList {
             return deleteFirst();
         }
 
-        Node secondLast = get(size - 2);
+        ListNode secondLast = get(size - 2);
         int val = tail.value;
         tail = secondLast;
         tail.next = null;
@@ -98,7 +97,7 @@ public class LinkedList {
             return deleteLast();
         }
 
-        Node prev = get(index - 1);
+        ListNode prev = get(index - 1);
         int val = prev.next.value;
 
         prev.next = prev.next.next;
@@ -106,8 +105,8 @@ public class LinkedList {
         return val;
     }
 
-    public Node find(int value) {
-        Node node = head;
+    public ListNode find(int value) {
+        ListNode node = head;
         while (node != null) {
             if (node.value == value) {
                 return node;
@@ -117,8 +116,8 @@ public class LinkedList {
         return null;
     }
 
-    public Node get(int index) {
-        Node node = head;
+    public ListNode get(int index) {
+        ListNode node = head;
         for (int i = 0; i < index; i++) {
             node = node.next;
         }
@@ -136,7 +135,7 @@ public class LinkedList {
     }
 
     public void display() {
-        Node temp = head;
+        ListNode temp = head;
         while (temp != null) {
             System.out.print(temp.value + " -> ");
             temp = temp.next;
@@ -147,7 +146,7 @@ public class LinkedList {
 
     // https://leetcode.com/problems/remove-duplicates-from-sorted-list
     public void duplicates() {
-        Node node = head;
+        ListNode node = head;
 
         while (node.next != null) {
             if (node.value == node.next.value) {
@@ -163,8 +162,8 @@ public class LinkedList {
 
     // https://leetcode.com/problems/merge-two-sorted-lists/submissions/
     public LinkedList merge(LinkedList first, LinkedList second) {
-        Node f = first.head;
-        Node s = second.head;
+        ListNode f = first.head;
+        ListNode s = second.head;
 
         LinkedList ans = new LinkedList();
 
@@ -201,8 +200,8 @@ public class LinkedList {
         }
 
         if (col < row) {
-            Node first = get(col);
-            Node second = get(col + 1);
+            ListNode first = get(col);
+            ListNode second = get(col + 1);
 
             if (first.value > second.value) {
                 // swap
@@ -211,13 +210,13 @@ public class LinkedList {
                     first.next = second.next;
                     second.next = first;
                 } else if (second == tail) {
-                    Node prev = get(col - 1);
+                    ListNode prev = get(col - 1);
                     prev.next = second;
                     tail = first;
                     first.next = null;
                     second.next = tail;
                 } else {
-                    Node prev = get(col - 1);
+                    ListNode prev = get(col - 1);
                     prev.next = second;
                     first.next = second.next;
                     second.next = first;
@@ -230,9 +229,8 @@ public class LinkedList {
     }
 
     // recursion reverse
-    private void reverse(Node node) {
-        if (node == tail) {
-            head = tail;
+    public void reverse(ListNode node) {
+        if (node == null) {
             return;
         }
         reverse(node.next);
@@ -253,9 +251,9 @@ public class LinkedList {
             return;
         }
 
-        Node prev = null;
-        Node present = head;
-        Node next = present.next;
+        ListNode prev = null;
+        ListNode present = head;
+        ListNode next = present.next;
 
         while (present != null) {
             present.next = prev;
@@ -290,9 +288,23 @@ public class LinkedList {
 //    middleOf linkedlist
 
     public ListNode middleNode(ListNode head) {
+        ListNode mid  = head;
+        while (head!=null && head.next !=null){
+
+            mid  = mid.next;
+
+            head  = head.next.next;
+
+        }
+
+        return mid;
+
+    }
+
+
+    public ListNode reverseBetween(ListNode head, int left, int right) {
 
         return null;
-
     }
 
 

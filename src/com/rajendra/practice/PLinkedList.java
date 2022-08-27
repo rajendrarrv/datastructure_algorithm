@@ -2,7 +2,6 @@ package com.rajendra.practice;
 
 import com.rajendra.collection.LinkedList;
 import com.rajendra.model.ListNode;
-import com.rajendra.model.Node;
 
 /**
  * Created by Rajendra Verma on 27/08/22.
@@ -17,32 +16,32 @@ public class PLinkedList extends LinkedList {
         if (index == size) {
             insertLast(val);
         }
-        Node current = head;
+        ListNode current = head;
 
         for (int i = 1; i < index; i++) {
             current = current.next;
         }
-        Node newNode = new Node(val);
-        Node temp = current.next;
-        current.next = newNode;
-        newNode.next = temp;
+        ListNode newListNode = new ListNode(val);
+        ListNode temp = current.next;
+        current.next = newListNode;
+        newListNode.next = temp;
     }
 
     @Override
-    public Node insertRec(int val, int index, Node node) {
+    public ListNode insertRec(int val, int index, ListNode ListNode) {
         if (index == 0) {
-            Node newNode = new Node(val, node);
+            ListNode newListNode = new ListNode(val, ListNode);
             size++;
-            return newNode;
+            return newListNode;
         }
-        node.next = insertRec(val, index - 1, node.next);
+        ListNode.next = insertRec(val, index - 1, ListNode.next);
 
-        return node;
+        return ListNode;
     }
 
     @Override
     public void duplicates() {
-        Node temp = head;
+        ListNode temp = head;
         while (temp != null && temp.next != null) {
             if (temp.value == temp.next.value) {
 
@@ -60,8 +59,8 @@ public class PLinkedList extends LinkedList {
 
     @Override
     public PLinkedList merge(LinkedList first, LinkedList second) {
-        Node a = first.head;
-        Node b = second.head;
+        ListNode a = first.head;
+        ListNode b = second.head;
         PLinkedList ans = new PLinkedList();
         while (a != null && b != null) {
             if (a.value < b.value) {
@@ -85,9 +84,9 @@ public class PLinkedList extends LinkedList {
     }
 
     @Override
-    public boolean hasCycle(ListNode node) {
-        ListNode fast = node;
-        ListNode slow = node;
+    public boolean hasCycle(ListNode ListNode) {
+        ListNode fast = ListNode;
+        ListNode slow = ListNode;
 
         while (fast != null && fast.next != null) {
             fast = fast.next.next;
@@ -101,9 +100,9 @@ public class PLinkedList extends LinkedList {
     }
 
     @Override
-    public int lengthCycle(ListNode node) {
-        ListNode fast = node;
-        ListNode slow = node;
+    public int lengthCycle(ListNode ListNode) {
+       ListNode fast = ListNode;
+       ListNode slow = ListNode;
 
         while (fast != null && fast.next != null) {
             fast = fast.next.next;
@@ -111,7 +110,7 @@ public class PLinkedList extends LinkedList {
 
             if (fast == slow) {
 
-                ListNode temp = slow;
+               ListNode temp = slow;
                 int length = 0;
                 do {
                     temp = temp.next;
@@ -124,6 +123,7 @@ public class PLinkedList extends LinkedList {
 
 
     }
+
     @Override
     public ListNode detectCycle(ListNode head) {
 // lets clear it has cycle or not
@@ -147,7 +147,7 @@ public class PLinkedList extends LinkedList {
         if (lengthOfCycle == 0)
             return null;
 
-//  find the start node
+//  find the start ListNode
 
         ListNode first = head;
         ListNode second = head;
@@ -188,18 +188,6 @@ public class PLinkedList extends LinkedList {
 
     }
 
-    @Override
-    public ListNode middleNode(ListNode head) {
-        ListNode slow = head;
-        ListNode fast = head;
-        while (fast != null && fast.next != null) {
-            slow = slow.next;
-            fast = fast.next.next;
-        }
-        return slow;
-    }
-
-
 
     private int findDigitSquare(int num) {
         int ans = 0;
@@ -214,12 +202,158 @@ public class PLinkedList extends LinkedList {
         return ans;
     }
 
+    @Override
+    public void reverse() {
+//        corner
+        if (size < 2) {
+            return;
+        }
+        ListNode prev = null;
+        ListNode present = head;
+        ListNode next = present.next;
+        while (present != null) {
+            present.next = prev;
+            prev = present;
+            present = next;
+            if (next != null) {
+                next = next.next;
+            }
+        }
+        head = prev;
+    }
+
+    public ListNode getMid(ListNode head) {
+        if (head == null)
+            return head;
+        ListNode mid = head;
+        while (head != null && head.next != null) {
+
+            mid = mid.next;
+            head = head.next.next;
+        }
+
+
+        return mid;
+
+
+    }
+
+
+    public ListNode reorderList(ListNode head) {
+        if (head == null) {
+            return head;
+        }
+        ListNode all = head;
+        ListNode half = getMid(all);
+        ListNode rev = reverseFromListNode(half);
+        while (rev != null) {
+
+        }
+        return rev;
+    }
+
+
+    public ListNode reverseFromListNode(ListNode head) {
+        if (head == null)
+            return head;
+
+        ListNode prev = null;
+        ListNode current = head;
+        ListNode next = current.next;
+        while (current != null) {
+            current.next = prev;
+            prev = current;
+            current = next;
+            if (next != null) {
+                next = next.next;
+            }
+
+        }
+        return prev;
+    }
+
+
+    @Override
+    public ListNode reverseBetween(ListNode head, int left, int right) {
+
+//         operation is already done
+        if (left == right) {
+            return head;
+        }
+
+        // skip the first left-1 ListNodes
+        ListNode current = head;
+        ListNode prev = null;
+        for (int i = 0; current != null && i < left - 1; i++) {
+            prev = current;
+            current = current.next;
+        }
+
+        ListNode last = prev;
+        ListNode newEnd = current;
+
+        // reverse between left and right
+        ListNode next = current.next;
+        for (int i = 0; current != null && i < right - left + 1; i++) {
+            current.next = prev;
+            prev = current;
+            current = next;
+            if (next != null) {
+                next = next.next;
+            }
+        }
+
+        if (last != null) {
+            last.next = prev;
+        } else {
+            head = prev;
+        }
+
+        newEnd.next = current;
+        return head;
+    }
+
+    public void display(ListNode head) {
+        ListNode temp = head;
+        while (temp != null) {
+            System.out.print(temp.value + " -> ");
+            temp = temp.next;
+        }
+        System.out.println("END");
+    }
+
     public void printSize() {
 
         System.out.println("Size " + size);
     }
 
     public static void main(String[] args) {
+        PLinkedList dummyList = new PLinkedList();
+        dummyList.insertLast(1);
+        dummyList.insertLast(2);
+        dummyList.insertLast(3);
+        dummyList.insertLast(4);
+        dummyList.display();
+        dummyList.display(dummyList.reorderList(dummyList.head));
 
+    }
+
+    private boolean isPali() {
+        ListNode temp = head;
+        ListNode mid = getMid(temp);
+        ListNode rev = reverseFromListNode(mid);
+        while (temp != null && rev != null) {
+            if (temp.value != rev.value)
+                break;
+
+            temp = temp.next;
+            rev = rev.next;
+
+        }
+        if (rev == null)
+            return true;
+
+
+        return false;
     }
 }
