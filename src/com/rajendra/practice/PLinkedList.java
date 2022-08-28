@@ -101,8 +101,8 @@ public class PLinkedList extends LinkedList {
 
     @Override
     public int lengthCycle(ListNode ListNode) {
-       ListNode fast = ListNode;
-       ListNode slow = ListNode;
+        ListNode fast = ListNode;
+        ListNode slow = ListNode;
 
         while (fast != null && fast.next != null) {
             fast = fast.next.next;
@@ -110,7 +110,7 @@ public class PLinkedList extends LinkedList {
 
             if (fast == slow) {
 
-               ListNode temp = slow;
+                ListNode temp = slow;
                 int length = 0;
                 do {
                     temp = temp.next;
@@ -239,18 +239,7 @@ public class PLinkedList extends LinkedList {
     }
 
 
-    public ListNode reorderList(ListNode head) {
-        if (head == null) {
-            return head;
-        }
-        ListNode all = head;
-        ListNode half = getMid(all);
-        ListNode rev = reverseFromListNode(half);
-        while (rev != null) {
 
-        }
-        return rev;
-    }
 
 
     public ListNode reverseFromListNode(ListNode head) {
@@ -313,19 +302,91 @@ public class PLinkedList extends LinkedList {
         return head;
     }
 
-    public void display(ListNode head) {
-        ListNode temp = head;
-        while (temp != null) {
-            System.out.print(temp.value + " -> ");
-            temp = temp.next;
-        }
-        System.out.println("END");
-    }
+
 
     public void printSize() {
 
         System.out.println("Size " + size);
     }
+
+    public void reorderList() {
+        if (head == null || head.next == null) {
+            return;
+        }
+
+        ListNode mid = middleNode(head);
+
+        ListNode hs = reverseFromListNode(mid);
+        ListNode hf = head;
+
+        // rearrange
+        while (hf != null && hs != null) {
+//             temp 3
+            ListNode temp = hf.next;
+//            hs  4
+            hf.next = hs;
+//            3
+            hf = temp;
+
+            temp = hs.next;
+            hs.next = hf;
+            hs = temp;
+        }
+
+        // next of tail to null
+        if (hf != null) {
+            hf.next = null;
+        }
+    }
+
+    public int getLength(ListNode head) {
+        ListNode node = head;
+        int length = 0;
+        while (node != null) {
+            length++;
+            node = node.next;
+        }
+        return length;
+    }
+
+    public ListNode reverseKGroup(ListNode head, int k) {
+        if (k <= 1 || head == null) {
+            return head;
+        }
+
+        ListNode current = head;
+        ListNode prev = null;
+
+        int length = getLength(head);
+        int count = length / k;
+        while (count > 0) {
+            ListNode last = prev;
+            ListNode newEnd = current;
+
+            ListNode next = current.next;
+            for (int i = 0; current != null && i < k; i++) {
+                current.next = prev;
+                prev = current;
+                current = next;
+                if (next != null) {
+                    next = next.next;
+                }
+            }
+
+            if (last != null) {
+                last.next = prev;
+            } else {
+                head = prev;
+            }
+
+            newEnd.next = current;
+
+            prev = newEnd;
+            count--;
+        }
+        return head;
+    }
+
 
     public static void main(String[] args) {
         PLinkedList dummyList = new PLinkedList();
@@ -334,11 +395,78 @@ public class PLinkedList extends LinkedList {
         dummyList.insertLast(3);
         dummyList.insertLast(4);
         dummyList.display();
-        dummyList.display(dummyList.reorderList(dummyList.head));
+        dummyList.reorderList();
+        dummyList.display();
 
     }
 
-    private boolean isPali() {
+    public ListNode reverseAlternateKGroup(ListNode head, int k) {
+        if (k <= 1 || head == null) {
+            return head;
+        }
+
+        // skip the first left-1 nodes
+        ListNode current = head;
+        ListNode prev = null;
+
+        while (current != null) {
+            ListNode last = prev;
+            ListNode newEnd = current;
+
+            // reverse between left and right
+            ListNode next = current.next;
+            for (int i = 0; current != null && i < k; i++) {
+                current.next = prev;
+                prev = current;
+                current = next;
+                if (next != null) {
+                    next = next.next;
+                }
+            }
+
+            if (last != null) {
+                last.next = prev;
+            } else {
+                head = prev;
+            }
+
+            newEnd.next = current;
+
+            // skip the k nodes
+            for (int i = 0; current != null && i < k; i++) {
+                prev = current;
+                current = current.next;
+            }
+        }
+        return head;
+    }
+
+    public ListNode rotateRight(ListNode head, int k) {
+        if (k <= 0 || head == null || head.next == null) {
+            return head;
+        }
+
+        ListNode last = head;
+        int length = 1;
+        while (last.next != null) {
+            last = last.next;
+            length++;
+        }
+
+        last.next = head;
+        int rotations = k % length;
+        int skip = length - rotations;
+        ListNode newLast = head;
+        for (int i = 0; i < skip - 1; i++) {
+            newLast = newLast.next;
+        }
+        head = newLast.next;
+        newLast.next = null;
+
+        return head;
+    }
+
+    private boolean isPalidrome() {
         ListNode temp = head;
         ListNode mid = getMid(temp);
         ListNode rev = reverseFromListNode(mid);
