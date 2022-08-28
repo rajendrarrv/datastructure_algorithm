@@ -1,5 +1,6 @@
 package com.rajendra.practice;
 
+import com.rajendra.collection.LinkedList;
 import com.rajendra.model.ListNode;
 
 /**
@@ -29,6 +30,10 @@ public class MergeSort implements IMergeSort {
 
     @Override
     public ListNode sortList(ListNode head) {
+        if (head ==null || head.next!=null){
+            return head;
+        }
+
         ListNode mid = mid(head);
         ListNode left = sortList(head);
         ListNode right = sortList(mid);
@@ -37,7 +42,7 @@ public class MergeSort implements IMergeSort {
 
     @Override
     public ListNode mid(ListNode head) {
-        ListNode midPrev = null;
+        ListNode midPrev = head;
         while (head != null && head.next != null) {
             midPrev = (midPrev == null) ? head : midPrev.next;
             head = head.next.next;
@@ -45,5 +50,17 @@ public class MergeSort implements IMergeSort {
         ListNode mid = midPrev.next;
         midPrev.next = null;
         return mid;
+    }
+
+    public static void main(String[] args) {
+        MergeSort f   = new MergeSort();
+        LinkedList d  = new  LinkedList();
+        d.insertLast(5);
+        d.insertLast(4);
+        d.insertLast(3);
+        d.insertLast(2);
+        d.insertLast(1);
+       d.head= f.sortList(d.head);
+        d.display();
     }
 }

@@ -143,6 +143,14 @@ public class LinkedList {
         System.out.println("END");
     }
 
+    public void display(ListNode d ) {
+        ListNode temp = d;
+        while (temp != null) {
+            System.out.print(temp.value + " -> ");
+            temp = temp.next;
+        }
+        System.out.println("END");
+    }
 
     // https://leetcode.com/problems/remove-duplicates-from-sorted-list
     public void duplicates() {

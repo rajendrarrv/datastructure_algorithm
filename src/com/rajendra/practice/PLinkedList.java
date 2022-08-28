@@ -39,6 +39,7 @@ public class PLinkedList extends LinkedList {
         return ListNode;
     }
 
+// duplicates  the adjecent
     @Override
     public void duplicates() {
         ListNode temp = head;
@@ -54,6 +55,36 @@ public class PLinkedList extends LinkedList {
         }
         tail = temp;
         tail.next = null;
+    }
+
+//  non adjectent
+    public void duplicatesII() {
+        ListNode temp = head;
+        ListNode prev = null;
+        while (temp != null) {
+            int val = temp.value;
+
+            ListNode temp1 = temp.next;
+
+            while (temp1 != null) {
+//                corner case
+                if (temp1.next == null) {
+                    prev.next = null;
+                }
+                if (val == temp1.value) {
+                    prev.next = temp1.next;
+
+                }
+                prev = temp1;
+                temp1 = temp1.next;
+
+            }
+
+
+            temp = temp.next;
+
+        }
+
     }
 
 
@@ -81,6 +112,25 @@ public class PLinkedList extends LinkedList {
             b = b.next;
         }
         return ans;
+    }
+
+
+    public ListNode mergeWithNode(ListNode list1, ListNode list2) {
+        ListNode dummyHead = new ListNode();
+        ListNode tail = dummyHead;
+        while (list1 != null && list2 != null) {
+            if (list1.value < list2.value) {
+                tail.next = list1;
+                list1 = list1.next;
+                tail = tail.next;
+            } else {
+                tail.next = list2;
+                list2 = list2.next;
+                tail = tail.next;
+            }
+        }
+        tail.next = (list1 != null) ? list1 : list2;
+        return dummyHead.next;
     }
 
     @Override
@@ -180,7 +230,7 @@ public class PLinkedList extends LinkedList {
 
         } while (slow != fast);
 
-        if (slow == 1)
+        if (slow == 1 || fast == 1)
             return true;
 
         return false;
@@ -237,9 +287,6 @@ public class PLinkedList extends LinkedList {
 
 
     }
-
-
-
 
 
     public ListNode reverseFromListNode(ListNode head) {
@@ -303,7 +350,6 @@ public class PLinkedList extends LinkedList {
     }
 
 
-
     public void printSize() {
 
         System.out.println("Size " + size);
@@ -320,23 +366,22 @@ public class PLinkedList extends LinkedList {
         ListNode hf = head;
 
         // rearrange
+        ListNode dummyNode = new ListNode();
+        ListNode trail = dummyNode;
         while (hf != null && hs != null) {
-//             temp 3
-            ListNode temp = hf.next;
-//            hs  4
-            hf.next = hs;
-//            3
-            hf = temp;
 
-            temp = hs.next;
-            hs.next = hf;
-            hs = temp;
+            trail.next = hf;
+            trail = trail.next;
+            hf = hf.next;
+            trail.next = hs;
+            trail = trail.next;
+            hs = hs.next;
+
         }
 
-        // next of tail to null
-        if (hf != null) {
-            hf.next = null;
-        }
+       this. head = dummyNode.next;
+
+
     }
 
     public int getLength(ListNode head) {
@@ -390,14 +435,18 @@ public class PLinkedList extends LinkedList {
 
     public static void main(String[] args) {
         PLinkedList dummyList = new PLinkedList();
-        dummyList.insertLast(1);
-        dummyList.insertLast(2);
-        dummyList.insertLast(3);
-        dummyList.insertLast(4);
-        dummyList.display();
-        dummyList.reorderList();
-        dummyList.display();
 
+        PLinkedList a = new PLinkedList();
+        a.insertLast(1);
+        a.insertLast(2);
+        a.insertLast(3);
+        a.insertLast(4);
+        a.insertLast(5);
+        a.insertLast(6);
+        a.reorderList();
+        a.display();
+//        System.out.println(""+ a.isPalidrome());
+//
     }
 
     public ListNode reverseAlternateKGroup(ListNode head, int k) {
@@ -470,7 +519,7 @@ public class PLinkedList extends LinkedList {
         ListNode temp = head;
         ListNode mid = getMid(temp);
         ListNode rev = reverseFromListNode(mid);
-        while (temp != null && rev != null) {
+        while (rev != null) {
             if (temp.value != rev.value)
                 break;
 
