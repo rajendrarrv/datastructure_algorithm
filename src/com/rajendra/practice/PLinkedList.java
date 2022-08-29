@@ -39,7 +39,7 @@ public class PLinkedList extends LinkedList {
         return ListNode;
     }
 
-// duplicates  the adjecent
+    // duplicates  the adjecent
     @Override
     public void duplicates() {
         ListNode temp = head;
@@ -57,34 +57,10 @@ public class PLinkedList extends LinkedList {
         tail.next = null;
     }
 
-//  non adjectent
+    //  non adjectent
     public void duplicatesII() {
-        ListNode temp = head;
-        ListNode prev = null;
-        while (temp != null) {
-            int val = temp.value;
-
-            ListNode temp1 = temp.next;
-
-            while (temp1 != null) {
-//                corner case
-                if (temp1.next == null) {
-                    prev.next = null;
-                }
-                if (val == temp1.value) {
-                    prev.next = temp1.next;
-
-                }
-                prev = temp1;
-                temp1 = temp1.next;
-
-            }
-
-
-            temp = temp.next;
-
-        }
-
+        bubbleSort();
+        duplicates();
     }
 
 
@@ -379,7 +355,7 @@ public class PLinkedList extends LinkedList {
 
         }
 
-       this. head = dummyNode.next;
+        this.head = dummyNode.next;
 
 
     }
@@ -442,8 +418,7 @@ public class PLinkedList extends LinkedList {
         a.insertLast(3);
         a.insertLast(4);
         a.insertLast(5);
-        a.insertLast(6);
-        a.reorderList();
+        a.rotateRight(2);
         a.display();
 //        System.out.println(""+ a.isPalidrome());
 //
@@ -490,9 +465,9 @@ public class PLinkedList extends LinkedList {
         return head;
     }
 
-    public ListNode rotateRight(ListNode head, int k) {
+    public void rotateRight(int k) {
         if (k <= 0 || head == null || head.next == null) {
-            return head;
+            return ;
         }
 
         ListNode last = head;
@@ -509,10 +484,10 @@ public class PLinkedList extends LinkedList {
         for (int i = 0; i < skip - 1; i++) {
             newLast = newLast.next;
         }
-        head = newLast.next;
+        this.head = newLast.next;
         newLast.next = null;
 
-        return head;
+
     }
 
     private boolean isPalidrome() {
