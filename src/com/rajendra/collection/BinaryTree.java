@@ -18,11 +18,12 @@ public class BinaryTree {
         root = buildTreeRec(data);
     }
 
-    public TreeNode buildTreeRec(int data[]) {
+    private TreeNode buildTreeRec(int data[]) {
         index++;
         if (data[index] == -1) {
             return null;
         }
+//        pre order traversal
         TreeNode newNode = new TreeNode(data[index]);
         newNode.left = buildTreeRec(data);
         newNode.right = buildTreeRec(data);
@@ -53,7 +54,7 @@ public class BinaryTree {
         System.out.print(root.val + ",");
     }
 
-    private void inOrderDisplay() {
+    public void inOrderDisplay() {
         inOrderDisplayRec(root);
     }
 
@@ -167,8 +168,8 @@ public class BinaryTree {
 
 
     public int diameter() {
-        TreeInfo diameter = diameterRecII(root);
-        return diameter.diameter;
+        int diameter = diameterRec(root);
+        return diameter;
     }
 
     //    ON^2
@@ -205,23 +206,19 @@ public class BinaryTree {
 
     public static void main(String[] args) {
 //        pre-order
-//        int nodes[] = {3,4,1,-1,-1,2,-1,-1,5,-1,-1};
-//        BinaryTree binaryTree = new BinaryTree();
-//        binaryTree.buildTree(nodes);
-//        System.out.println("Root");
-//        binaryTree.levelOrderDisplay();
-//        BinaryTree sub  = new BinaryTree();
-//        int subnodes [] = {4,1,-1,-1,2,-1,-1};
-//        sub.buildTree(subnodes);
-//        System.out.println("sub tree");
-//        sub.levelOrderDisplay();
-//        System.out.println("Does sub tree exsit "+binaryTree.isSubtree(sub.root));
+        int nodes[] = {3, 4, 1, -1, -1, 2, -1, -1, 5, -1, -1};
+        BinaryTree binaryTree = new BinaryTree();
+        binaryTree.buildTree(nodes);
+        int diameter = binaryTree.diameter();
+        System.out.println("Diameter =" + diameter);
 
-        BinaryTree kth = new BinaryTree();
-        int[] nodes = {1, 2, 4, -1, -1, 5, -1, -1, 3, -1, 6, -1, -1};
-        kth.buildTree(nodes);
-        int kthleght = kth.sumOfNodesAtLength(3);
-        System.out.println("s" + kthleght);
+//       binaryTree.levelOrderDisplay();
+//        System.out.println("Height of Tree "+binaryTree.height());
+//        BinaryTree kth = new BinaryTree();
+//        int[] nodes = {1, 2, 4, -1, -1, 5, -1, -1, 3, -1, 6, -1, -1};
+//        kth.buildTree(nodes);
+//        int kthleght = kth.sumOfNodesAtLength(3);
+//        System.out.println("s" + kthleght);
 
     }
 
