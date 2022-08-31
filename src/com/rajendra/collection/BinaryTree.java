@@ -97,6 +97,8 @@ public class BinaryTree {
         if (root == null) {
             return false;
         }
+        if (subtree==null)
+            return true;
 
         if (root.val == subtree.val) {
 
@@ -168,8 +170,8 @@ public class BinaryTree {
 
 
     public int diameter() {
-        int diameter = diameterRec(root);
-        return diameter;
+        TreeInfo diameter = diameterRecII(root);
+        return diameter.diameter;
     }
 
     //    ON^2
@@ -209,16 +211,10 @@ public class BinaryTree {
         int nodes[] = {3, 4, 1, -1, -1, 2, -1, -1, 5, -1, -1};
         BinaryTree binaryTree = new BinaryTree();
         binaryTree.buildTree(nodes);
-        int diameter = binaryTree.diameter();
-        System.out.println("Diameter =" + diameter);
-
-//       binaryTree.levelOrderDisplay();
-//        System.out.println("Height of Tree "+binaryTree.height());
-//        BinaryTree kth = new BinaryTree();
-//        int[] nodes = {1, 2, 4, -1, -1, 5, -1, -1, 3, -1, 6, -1, -1};
-//        kth.buildTree(nodes);
-//        int kthleght = kth.sumOfNodesAtLength(3);
-//        System.out.println("s" + kthleght);
+        BinaryTree subtree = new BinaryTree();
+        int[] data = {3, 4, -1, -1, 5, -1, -1};
+        subtree.buildTree(data);
+        System.out.println("is sub tree "+binaryTree.isSubtree(subtree.root));
 
     }
 

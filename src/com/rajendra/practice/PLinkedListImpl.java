@@ -1,12 +1,12 @@
 package com.rajendra.practice;
 
-import com.rajendra.collection.LinkedList;
+import com.rajendra.collection.LinkedListImpl;
 import com.rajendra.model.ListNode;
 
 /**
  * Created by Rajendra Verma on 27/08/22.
  */
-public class PLinkedList extends LinkedList {
+public class PLinkedListImpl extends LinkedListImpl {
 
     @Override
     public void insert(int val, int index) {
@@ -65,10 +65,10 @@ public class PLinkedList extends LinkedList {
 
 
     @Override
-    public PLinkedList merge(LinkedList first, LinkedList second) {
+    public PLinkedListImpl merge(LinkedListImpl first, LinkedListImpl second) {
         ListNode a = first.head;
         ListNode b = second.head;
-        PLinkedList ans = new PLinkedList();
+        PLinkedListImpl ans = new PLinkedListImpl();
         while (a != null && b != null) {
             if (a.value < b.value) {
                 ans.insertLast(a.value);
@@ -410,9 +410,9 @@ public class PLinkedList extends LinkedList {
 
 
     public static void main(String[] args) {
-        PLinkedList dummyList = new PLinkedList();
+        PLinkedListImpl dummyList = new PLinkedListImpl();
 
-        PLinkedList a = new PLinkedList();
+        PLinkedListImpl a = new PLinkedListImpl();
         a.insertLast(1);
         a.insertLast(2);
         a.insertLast(3);

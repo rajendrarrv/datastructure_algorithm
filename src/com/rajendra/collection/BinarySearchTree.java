@@ -147,9 +147,9 @@ public class BinarySearchTree extends BinaryTree {
         System.out.println("In order display");
         bst.levelOrderDisplay();
         System.out.println();
-//        System.out.println("Print in the range 1 to 5");
-//        bst.printInRange(1, 3);
-        bst.printRootToLeaf();
+ System.out.println("Print in the range 1 to 5");
+        bst.printInRange(1, 3);
+       // bst.printRootToLeaf();
 
     }
 
