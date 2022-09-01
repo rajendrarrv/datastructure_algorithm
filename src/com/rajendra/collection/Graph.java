@@ -1,256 +1,232 @@
 package com.rajendra.collection;
 
+import com.rajendra.model.Node;
+
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Stack;
-import java.util.Vector;
-
-/**
- * Created by Rajendra Verma on 30/08/22.
- */
-public class Graph {
-    private Map<Integer, LinkedList<Integer>> map = new HashMap<>();
-
-    public void addVertex(int s) {
-        map.put(s, new LinkedList());
-    }
-
-//  Adding of edge or connection
 
 /*
- we have only the provision to add the  connection not node, when we are adding the connection we have total of three cases
- cases :
- 1. source does not exist
- 2. destination does not exist
- 3. both are existing just you have to establish the connection
- 4. if  the connection is bi-directional than make the connection voice versa
-*/
+ * 1. adjest and vertices
+ * 2. degree
+ * 3. path
+ * 4. connected graph
+ * 5. connected component
+ *  */
+
+public class Graph {
+
+    public static final int BI_DIRECTIONAL = 12;
+    public HashMap<Integer, Node> nodeLookup = new HashMap<>();
 
 
-    public void addEdge(int s, int d) {
-        addEdge(s, d, false);
+    public int v;
+    private int type;
+
+    public int getType() {
+        return type;
     }
 
-    public void addEdge(int source, int destination, boolean bidirectional) {
-//        source Node/vertex does not exist
-        if (!map.containsKey(source))
-            addVertex(source);
-//destination Node/vertex does not exist
-        if (!map.containsKey(destination))
-            addVertex(destination);
-//  both the nodes exist just you have to connect
-        map.get(source).add(destination);
-//         you  havve to connet both the ways
-        if (bidirectional == true) {
-            map.get(destination).add(source);
+    public void setType(int type) {
+        this.type = type;
+    }
+
+    public Graph(int v) {
+        this.v = v;
+        for (int i = 1; i <= v; i++) {
+            nodeLookup.put(i, new Node(i));
         }
     }
 
-    // get the number of connection
-    public int getVertexCount() {
 
-        return map.keySet().size();
+    public void build(int[][] matrix) {
+        int col = matrix.length;
+        for (int i = 0; i < col; i++) {
+            int s = matrix[i][0];
+            int d = matrix[i][1];
+            addEdge(s, d);
+        }
+
+
     }
 
-    public int getEdgesCount(boolean bidirection) {
-        int count = 0;
-        for (int v : map.keySet()) {
-            count += map.get(v).size();
+
+    Node getNode(Integer id) {
+        if (nodeLookup.containsKey(id))
+            return nodeLookup.get(id);
+        else {
+            Node newNode = new Node(id);
+            nodeLookup.put(id, newNode);
+            return newNode;
         }
-        if (bidirection == true) {
-            count = count / 2;
-        }
-        return count;
     }
+
+
+    public int edgesSize() {
+        int sum = 0;
+        for (Map.Entry<Integer, Node> entry : nodeLookup.entrySet()) {
+            sum += entry.getValue().neighbors.size();
+        }
+        return sum / 2;
+
+    }
+
 
     public boolean hasVertex(int s) {
-
-        return map.containsKey(s);
+        return nodeLookup.getOrDefault(s, null) != null;
     }
 
-    // total number of connection
-    public boolean hasEdge(int s, int d) {
-        return map.get(s).contains(d);
+    public int vertexNoSelfEdges() {
+        Iterator hmIterator = nodeLookup.entrySet().iterator();
 
+        while (hmIterator.hasNext()) {
+
+            Map.Entry mapElement
+                    = (Map.Entry) hmIterator.next();
+            Node d = ((Node) mapElement.getValue());
+
+            if (d.neighbors.size() == 0) {
+                return d.id;
+            }
+        }
+        return -1;
+    }
+
+    public boolean hasEdge(int source, int destination) {
+        Node s = getNode(source);
+        Node d = getNode(destination);
+        return s != null && d != null;
+    }
+
+    public int verticesSize() {
+        return nodeLookup.size();
     }
 
 
-    /*
- Breath first search traversal
+    void addEdge(int source, int dest) {
+        Node s = getNode(source);
+        Node d = getNode(dest);
+        d.inDegree();
+        s.inDegree();
+        s.neighbors.add(d);
+        switch (type) {
+            case BI_DIRECTIONAL:
+                d.neighbors.add(s);
+                break;
+        }
+    }
 
- 1. Visiting a vertex
- 2. Exploring the vertex
- 3. Mark the visited vertex
-
-Visiting of the vertex
-Going to the particular node/vertex, like we are going to visit relatives,friends or going to date someone.
-
-Exploring the vertex
-While going to date a girl, explore other  girls to date to the same place for the next time.
-
-Marked the visited vertex
-Date a girl once in a life.
-
-Collection used
-1. array
-2. queue.
-
-Strategy
-
-Iterative
-
-BFS common with tree
-1. it is level traversal order of the binary tee
-
-
- * */
-
-
-    void bfsTraversal(int s) {
-        int v = map.keySet().size();
+    public void bfsTraversal(int source) {
         boolean visited[] = new boolean[v];
-
-        LinkedList<Integer> queue = new LinkedList<Integer>();
-
-        visited[s] = true;
-        queue.add(s);
-        while (queue.size() != 0) {
-            s = queue.poll();
-            System.out.print(s + "->");
-            Iterator<Integer> i = map.get(s).listIterator();
+        LinkedList<Node> queue = new LinkedList<>();
+        visited[source] = true;
+        queue.add(getNode(source));
+        while (!queue.isEmpty()) {
+            Node disPlayNode = queue.poll();
+            System.out.print(disPlayNode.id + "->");
+            Iterator<Node> i = disPlayNode.neighbors.listIterator();
             while (i.hasNext()) {
-                int n = i.next();
-                if (!visited[n]) {
-                    visited[n] = true;
-                    queue.add(n);
+                Node next = i.next();
+                if (!visited[next.id]) {
+                    visited[next.id] = true;
+                    queue.add(next);
                 }
             }
         }
+
     }
 
-/*
-Depth First Search Traversal
- 1. Visiting a vertex
- 2. Exploring the vertex
- 3. Mark the visited vertex
 
- Visiting a vertex and exploring a vertex
+    void dfsTraversalRec(int v, boolean visited[]) {
+        visited[v] = true;
+        System.out.print(v + " ");
 
- suppose you have to date three girls a day, in three different location, date first girl at location (A), date second girl at location (B), date third girl at location (C)
- when you have completed dating all the girls and going to home, explore all the girl opportunity at location C,B,A.
-
-Marked the visited vertex
-Date a girl once in a life.
-
-Collection
-
-1. stack
-
-Strategy
-
-1. Recursive
-
-Default  stack  when calling recursive function
-
-2. Iterative
-
-same as queue in BFS  we used stack
-
-
-Common with tree
-It is a same as pre-order traversal
-
-
-Complexity Analysis:
-
-Time complexity: O(V + E), where V is the number of vertices and E is the number of edges in the graph.
-Space Complexity: O(V), since an extra visited array of size V is required.
- */
-
-    public void dfsTraversal(int s) {
-        int v = map.keySet().size();
-
-        boolean[] visited = new boolean[v];
-        dfsTraversalRec(s, visited);
-    }
-
-   /* Recursive
-    default  stack  when calling recursive function*/
-
-    private void dfsTraversalRec(int s, boolean[] visited) {
-        visited[s] = true;
-        System.out.print(s + "->");
-
-        // Recur for all the vertices adjacent to this
-        // vertex
-        Iterator<Integer> i = map.get(s).listIterator();
+        Node source = getNode(v);
+        Iterator<Node> i = source.neighbors.listIterator();
         while (i.hasNext()) {
-            int n = i.next();
-            if (!visited[n])
-                dfsTraversalRec(n, visited);
+            Node n = i.next();
+            if (!visited[n.id])
+                dfsTraversalRec(n.id, visited);
         }
     }
 
-    void dfsTraversalIterative(int s) {
-        int v = map.keySet().size();
-        Vector<Boolean> visited = new Vector<Boolean>(v);
-//        mark all the visiter false by default
-        for (int i = 0; i < v; i++)
-            visited.add(false);
+    void dfsTraversalIter(int s, boolean[] visited) {
 
-        Stack<Integer> stack = new Stack<>();
-        stack.push(s);
-        while (stack.empty() == false) {
-            s = stack.peek();
+        boolean nodes[] = new boolean[v];
+
+        Node sourceNode = getNode(s);
+        Stack<Node> stack = new Stack<>();
+
+        stack.push(sourceNode);                                    //push root node to the stack
+
+        while (!stack.empty()) {
+            Node rootNode = stack.peek();
             stack.pop();
-            if (visited.get(s) == false) {
-                System.out.print(s + " ");
-                visited.set(s, true);
+
+            if (nodes[s] == false) {
+                System.out.print(rootNode.id + " ");
+                nodes[rootNode.id] = true;
             }
-            Iterator<Integer> i = map.get(s).listIterator();
+
+            for (int i = 0; i < rootNode.neighbors.size(); i++)  //iterate through the linked list and then propagate to the next few nodes
+            {
+                Node a = rootNode.neighbors.get(i);
+                if (!nodes[a.id])                    //only push those nodes to the stack which aren't in it already
+                {
+                    stack.push(a);                          //push the top element to the stack
+                }
+            }
+
+        }
+    }
+
+
+    public boolean isValidGraph(int source, int destination) {
+        if (source > v || destination > v) return false;
+        LinkedList<Node> temp;
+        boolean visited[] = new boolean[v];
+        LinkedList<Node> queue = new LinkedList<Node>();
+        visited[source] = true;
+        queue.add(getNode(source));
+        Iterator<Node> i;
+        while (queue.size() != 0) {
+            Node disPlayNode = queue.poll();
+
+            int n;
+            i = disPlayNode.neighbors.listIterator();
             while (i.hasNext()) {
-                int n = i.next();
-                if (!visited.get(n))
-                    stack.push(n);
+                Node nextNode = i.next();
+                if (nextNode.id == destination)
+                    return true;
+
+                if (!visited[nextNode.id]) {
+                    visited[nextNode.id] = true;
+                    queue.add(nextNode);
+                }
             }
+        }
+        return false;
+
+
+    }
+
+
+    public int findCentre() {
+        Iterator hmIterator = nodeLookup.entrySet().iterator();
+
+        while (hmIterator.hasNext()) {
+
+            Map.Entry mapElement
+                    = (Map.Entry) hmIterator.next();
+            Node d = ((Node) mapElement.getValue());
+
+            int centreNode = nodeLookup.size() - 1;
+            if (d.inDegree == centreNode)
+                return (int) mapElement.getKey();
 
         }
+        return -1;
     }
-
-    public void printAdjecent() {
-        StringBuilder builder = new StringBuilder();
-
-        for (int v : map.keySet()) {
-            builder.append(v + ": ");
-            for (int w : map.get(v)) {
-                builder.append(w + " ");
-            }
-            builder.append("\n");
-        }
-        System.out.println(builder);
-
-    }
-
-
-    public static void main(String args[]) {
-
-//        directed graph
-        Graph g = new Graph();
-        g.addEdge(1, 0, true);
-        g.addEdge(2, 1, true);
-        g.addEdge(3, 4, true);
-        g.addEdge(4, 0, true);
-//        if the all nodes/vertices is bidirectional than it is number of egdes will be double
-        System.out.println("Number of Edges " + g.getEdgesCount(true));
-        System.out.println("Number of nodes(Vertex) " + g.getVertexCount());
-        System.out.println("BFS traversal ");
-        g.bfsTraversal(0);
-
-
-    }
-
-
 }
-
