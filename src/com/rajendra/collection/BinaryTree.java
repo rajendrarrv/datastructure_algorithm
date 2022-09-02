@@ -4,6 +4,7 @@ import com.rajendra.model.TreeInfo;
 import com.rajendra.model.TreeNode;
 
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Queue;
 
 /**
@@ -18,11 +19,37 @@ public class BinaryTree {
         root = buildTreeRec(data);
     }
 
+    public void buildTree(List<Integer> data) {
+        root = buildTreeRec(data);
+    }
+
+
+    private TreeNode buildTreeRec(List<Integer> data) {
+        index++;
+
+        if (data.size() <= index) {
+            return null;
+        }
+//        if (data.get(index) == null) {
+//            return null;
+//        }
+//        pre order traversal
+        TreeNode newNode = new TreeNode(data.get(index));
+        newNode.left = buildTreeRec(data);
+        newNode.right = buildTreeRec(data);
+        return newNode;
+    }
+
+
     private TreeNode buildTreeRec(int data[]) {
         index++;
+        if (index >= data.length)
+            return null;
         if (data[index] == -1) {
             return null;
         }
+
+
 //        pre order traversal
         TreeNode newNode = new TreeNode(data[index]);
         newNode.left = buildTreeRec(data);
@@ -207,13 +234,13 @@ public class BinaryTree {
 
 
     public static void main(String[] args) {
-//        pre-order
-        BinarySearchTree a = new BinarySearchTree();
-        int[] data = {1, 2, 3};
-        a.buildTree(data);
-        BinarySearchTree b = new BinarySearchTree();
-        b.buildTree(data);
-        System.out.println("Tree is same " + b.isSameTree(a.root, b.root));
+        BinaryTree binaryTree = new BinaryTree();
+        int[] data = {1, 2, -1, -1, 3, 4, -1, -1};
+        binaryTree.buildTree(data);
+        System.out.println("");
+        binaryTree.levelOrderDisplay();
+
+
     }
 
     private int sumOfNodesAtLength(int k) {
@@ -304,7 +331,6 @@ public class BinaryTree {
     }
 
 
-
     public boolean isSymmetric(TreeNode node) {
         return isSymmetric(this.root, node);
     }
@@ -319,4 +345,107 @@ public class BinaryTree {
             return false;
         return true;
     }
+
+    public int minDepth() {
+        return minDepth(this.root);
+    }
+
+    private int minDepth(TreeNode root) {
+        if (root == null)
+            return 0;
+
+        if (root.left == null && root.right == null)
+            return 1;
+
+        if (root.left == null)
+            return minDepth(root.right) + 1;
+
+        if (root.right == null)
+            return minDepth(root.left) + 1;
+
+        return Math.min(minDepth(root.left),
+                minDepth(root.right)) + 1;
+    }
+
+    public boolean hasPathSum(int targetSum) {
+
+        return hasPathSum(root, targetSum);
+    }
+
+    int sum = 0;
+
+    public boolean hasPathSum(TreeNode root, int targetSum) {
+        if (root == null) return false;
+
+        hasPathSum(root.left, targetSum);
+        if (targetSum < sum) {
+            sum = sum + root.val;
+        } else if (targetSum == sum)
+            return true;
+
+        hasPathSum(root.right, targetSum);
+        return false;
+    }
+
+    public boolean hasPath(TreeNode root, int target, int sum) {
+        return hasPathSumRec(root, target, sum);
+    }
+
+    private boolean hasPathSumRec(TreeNode root, int target, int sum) {
+        if (root == null) {
+            return false;
+        }
+        sum = sum + root.val;
+        if (sum == target && root.right == null && root.left == null) {
+            return true;
+        }
+        boolean IsNotPathSum = hasPathSumRec(root.left, target, sum) ||
+                hasPathSumRec(root.right, target, sum);
+        sum = sum - root.val;
+        return IsNotPathSum;
+
+    }
+
+    public List<Integer> preorderTraversal(TreeNode root) {
+        List<Integer> answer = new LinkedList<>();
+        preorderTraversalRec(root, answer);
+
+        return answer;
+
+    }
+
+    private void preorderTraversalRec(TreeNode root, List<Integer> answer) {
+        if (root == null)
+            return;
+
+        answer.add(root.val);
+        preorderTraversalRec(root.left, answer);
+        preorderTraversalRec(root.right, answer);
+
+    }
+
+    public TreeNode invertTree(TreeNode root) {
+
+        invertTreeRec(root);
+        return root;
+
+    }
+
+    private TreeNode invertTreeRec(TreeNode node) {
+        if (node == null)
+            return node;
+
+        /* recursive calls */
+        TreeNode left = invertTreeRec(node.left);
+        TreeNode right = invertTreeRec(node.right);
+
+        /* swap the left and right pointers */
+        node.left = right;
+        node.right = left;
+
+        return node;
+
+    }
+
+
 }
