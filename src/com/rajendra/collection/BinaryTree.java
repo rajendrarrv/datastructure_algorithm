@@ -97,7 +97,7 @@ public class BinaryTree {
         if (root == null) {
             return false;
         }
-        if (subtree==null)
+        if (subtree == null)
             return true;
 
         if (root.val == subtree.val) {
@@ -208,14 +208,12 @@ public class BinaryTree {
 
     public static void main(String[] args) {
 //        pre-order
-        int nodes[] = {3, 4, 1, -1, -1, 2, -1, -1, 5, -1, -1};
-        BinaryTree binaryTree = new BinaryTree();
-        binaryTree.buildTree(nodes);
-        BinaryTree subtree = new BinaryTree();
-        int[] data = {3, 4, -1, -1, 5, -1, -1};
-        subtree.buildTree(data);
-        System.out.println("is sub tree "+binaryTree.isSubtree(subtree.root));
-
+        BinarySearchTree a = new BinarySearchTree();
+        int[] data = {1, 2, 3};
+        a.buildTree(data);
+        BinarySearchTree b = new BinarySearchTree();
+        b.buildTree(data);
+        System.out.println("Tree is same " + b.isSameTree(a.root, b.root));
     }
 
     private int sumOfNodesAtLength(int k) {
@@ -251,6 +249,33 @@ public class BinaryTree {
         return height;
     }
 
+    static boolean flag = false;
+
+    public boolean isSameTree(TreeNode p, TreeNode q) {
+        ;
+        return isSameTreeRec(p, q);
+    }
+
+    public boolean isSameTreeRec(TreeNode p, TreeNode q) {
+        if (p == null && q == null) {
+            return true;
+        }
+        if (p == null) {
+            return false;
+        }
+        if (q == null) {
+            return false;
+        }
+
+        flag = isSameTreeRec(p.left, q.left);
+        if (p.val != q.val) {
+            return false;
+        }
+        flag = isSameTreeRec(p.right, q.right);
+
+        return flag;
+    }
+
     private int heightOfTree(TreeNode root) {
         if (root == null)
             return 0;
@@ -259,5 +284,39 @@ public class BinaryTree {
         return Math.max(left, right) + 1;
     }
 
+    public boolean isBalanced() {
 
+        return isBalanced(this.root);
+    }
+
+
+    private boolean isBalanced(TreeNode node) {
+        int lh;
+        int rh;
+        if (node == null)
+            return true;
+        lh = heightOfTree(node.left);
+        rh = heightOfTree(node.right);
+        if (Math.abs(lh - rh) <= 1 && isBalanced(node.left)
+                && isBalanced(node.right))
+            return true;
+        return false;
+    }
+
+
+
+    public boolean isSymmetric(TreeNode node) {
+        return isSymmetric(this.root, node);
+    }
+
+    private boolean isSymmetric(TreeNode left, TreeNode right) {
+        if (left == null && right == null) return true;
+        if (left == null || right == null) return false;
+        if (left.val != right.val) return false;
+        if (!isSymmetric(left.left, right.right))
+            return false;
+        if (!isSymmetric(left.right, right.left))
+            return false;
+        return true;
+    }
 }
