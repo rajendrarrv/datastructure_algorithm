@@ -1,6 +1,6 @@
 package com.rajendra.practice;
 
-import com.rajendra.collection.LinkedList;
+import com.rajendra.collection.LinkedListImpl;
 import com.rajendra.model.ListNode;
 
 /**
@@ -54,7 +54,7 @@ public class MergeSort implements IMergeSort {
 
     public static void main(String[] args) {
         MergeSort f   = new MergeSort();
-        LinkedList d  = new  LinkedList();
+        LinkedListImpl d  = new LinkedListImpl();
         d.insertLast(5);
         d.insertLast(4);
         d.insertLast(3);

@@ -6,13 +6,13 @@ import com.rajendra.model.ListNode;
  * kunal class
  * Created by Rajendra Verma on 27/08/22.
  */
-public class LinkedList {
+public class LinkedListImpl {
 
     public ListNode head;
     public ListNode tail;
     public int size;
 
-    public LinkedList() {
+    public LinkedListImpl() {
         this.size = 0;
     }
 
@@ -169,11 +169,11 @@ public class LinkedList {
     }
 
     // https://leetcode.com/problems/merge-two-sorted-lists/submissions/
-    public LinkedList merge(LinkedList first, LinkedList second) {
+    public LinkedListImpl merge(LinkedListImpl first, LinkedListImpl second) {
         ListNode f = first.head;
         ListNode s = second.head;
 
-        LinkedList ans = new LinkedList();
+        LinkedListImpl ans = new LinkedListImpl();
 
         while (f != null && s != null) {
             if (f.value < s.value) {

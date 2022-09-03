@@ -121,10 +121,9 @@ public class BinarySearchTree extends BinaryTree {
         if (root == null)
             return;
         path.add(root.val);
-//        leaf
-        if (root.left ==null&& root.right==null){
+        if (root.left == null && root.right == null) {
             printPath(path);
-        }else { // non leaf
+        } else {
             printRootToLeafRec(root.left, path);
             printRootToLeafRec(root.right, path);
         }
@@ -133,11 +132,26 @@ public class BinarySearchTree extends BinaryTree {
     }
 
     private void printPath(ArrayList<Integer> path) {
-        for (int val:path) {
-            System.out.print(val+"->");
+        for (int val : path) {
+            System.out.print(val + "->");
         }
         System.out.print("END");
         System.out.println();
+    }
+
+    private TreeNode sortedArrayToBstRec(int[] nums) {
+        return sortedArrayToBstRec(nums, 0, nums.length - 1);
+    }
+
+    public TreeNode sortedArrayToBstRec(int[] nums, int start, int end) {
+        if (start > end) {
+            return null;
+        }
+        int mid = (start + end) / 2;
+        TreeNode treeNode = new TreeNode(nums[mid]);
+        treeNode.left = sortedArrayToBstRec(nums, start, mid - 1);
+        treeNode.right = sortedArrayToBstRec(nums, mid + 1, end);
+    return treeNode;
     }
 
     public static void main(String[] args) {
@@ -147,9 +161,9 @@ public class BinarySearchTree extends BinaryTree {
         System.out.println("In order display");
         bst.levelOrderDisplay();
         System.out.println();
-//        System.out.println("Print in the range 1 to 5");
-//        bst.printInRange(1, 3);
-        bst.printRootToLeaf();
+        System.out.println("Print in the range 1 to 5");
+        bst.printInRange(1, 3);
+        // bst.printRootToLeaf();
 
     }
 
