@@ -19,26 +19,8 @@ public class BinaryTree {
         root = buildTreeRec(data);
     }
 
-    public void buildTree(List<Integer> data) {
-        root = buildTreeRec(data);
-    }
 
 
-    private TreeNode buildTreeRec(List<Integer> data) {
-        index++;
-
-        if (data.size() <= index) {
-            return null;
-        }
-//        if (data.get(index) == null) {
-//            return null;
-//        }
-//        pre order traversal
-        TreeNode newNode = new TreeNode(data.get(index));
-        newNode.left = buildTreeRec(data);
-        newNode.right = buildTreeRec(data);
-        return newNode;
-    }
 
 
     private TreeNode buildTreeRec(int data[]) {
