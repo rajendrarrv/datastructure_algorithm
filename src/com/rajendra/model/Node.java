@@ -12,7 +12,11 @@ public class Node {
     public int id;
     public int inDegree = 0;
     public List<Node> neighbors;
-    public boolean visited;
+    public int degree;
+
+    public void degree() {
+        this.degree++;
+    }
 
     public void inDegree() {
         inDegree++;

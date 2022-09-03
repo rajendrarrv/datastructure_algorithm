@@ -2,16 +2,13 @@ package com.rajendra.collection;
 
 import com.rajendra.model.Node;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Queue;
-import java.util.Set;
 import java.util.Stack;
-import java.util.Vector;
 
 /*
  * 1. adjest and vertices
@@ -24,7 +21,7 @@ import java.util.Vector;
 public class Graph {
 
     public static final int BI_DIRECTIONAL = 12;
-    public HashMap<Integer, Node> nodeLookup = new HashMap<>();
+    public HashMap<Integer, Node> verticesMap = new HashMap<>();
 
 
     public int v;
@@ -40,12 +37,13 @@ public class Graph {
 
     public Graph(int v) {
         this.v = v;
+//        Collection of Non Connected Vertices
         for (int i = 0; i < v; i++) {
-            nodeLookup.put(i, new Node(i));
+            verticesMap.put(i, new Node(i));
         }
     }
 
-
+    // establishing the connection in between two  vertices, called source and destination
     public void build(int[][] matrix) {
         int col = matrix.length;
         for (int i = 0; i < col; i++) {
@@ -59,19 +57,19 @@ public class Graph {
 
 
     Node getNode(Integer id) {
-        if (nodeLookup.containsKey(id))
-            return nodeLookup.get(id);
+        if (verticesMap.containsKey(id))
+            return verticesMap.get(id);
         else {
             Node newNode = new Node(id);
-            nodeLookup.put(id, newNode);
+            verticesMap.put(id, newNode);
             return newNode;
         }
     }
 
-
+    // total number of connection
     public int edgesSize() {
         int sum = 0;
-        for (Map.Entry<Integer, Node> entry : nodeLookup.entrySet()) {
+        for (Map.Entry<Integer, Node> entry : verticesMap.entrySet()) {
             sum += entry.getValue().neighbors.size();
         }
         return sum / 2;
@@ -80,11 +78,12 @@ public class Graph {
 
 
     public boolean hasVertex(int s) {
-        return nodeLookup.getOrDefault(s, null) != null;
+        return verticesMap.getOrDefault(s, null) != null;
     }
 
+    //  Vertices which don't have any connection
     public int vertexNoSelfEdges() {
-        Iterator hmIterator = nodeLookup.entrySet().iterator();
+        Iterator hmIterator = verticesMap.entrySet().iterator();
 
         while (hmIterator.hasNext()) {
 
@@ -99,8 +98,9 @@ public class Graph {
         return -1;
     }
 
+    // no degree and maximum indegree
     public int trust() {
-        Iterator hmIterator = nodeLookup.entrySet().iterator();
+        Iterator hmIterator = verticesMap.entrySet().iterator();
 
         while (hmIterator.hasNext()) {
 
@@ -108,8 +108,8 @@ public class Graph {
                     = (Map.Entry) hmIterator.next();
             Node d = ((Node) mapElement.getValue());
 
-            int inDegree  = d.inDegree;
-            if (d.neighbors.size() == 0 && inDegree == v-1) {
+            int inDegree = d.inDegree;
+            if (d.neighbors.size() == 0 && inDegree == v - 1) {
 
 
                 return d.id;
@@ -118,6 +118,7 @@ public class Graph {
         return -1;
     }
 
+    // has connection inbetween source and destination
     public boolean hasEdge(int source, int destination) {
         Node s = getNode(source);
         Node d = getNode(destination);
@@ -125,7 +126,7 @@ public class Graph {
     }
 
     public int verticesSize() {
-        return nodeLookup.size();
+        return verticesMap.size();
     }
 
 
@@ -133,7 +134,6 @@ public class Graph {
         Node s = getNode(source);
         Node d = getNode(dest);
         d.inDegree();
-        s.inDegree();
         s.neighbors.add(d);
         switch (type) {
             case BI_DIRECTIONAL:
@@ -166,16 +166,17 @@ public class Graph {
     public void bfsTraversal(Node source) {
         Map<Integer, Boolean> visited = new HashMap<>();
         LinkedList<Node> queue = new LinkedList<>();
-//        visited[source.id] = true;
         visited.put(source.id, true);
         queue.add(source);
         while (!queue.isEmpty()) {
             Node disPlayNode = queue.poll();
+//            Visiting a Vertex
             System.out.print(disPlayNode.id + "->");
             Iterator<Node> i = disPlayNode.neighbors.listIterator();
             while (i.hasNext()) {
                 Node next = i.next();
                 if (!visited.getOrDefault(next.id, false)) {
+//                    Exploring the other vertices
                     visited.put(next.id, true);
                     queue.add(next);
                 }
@@ -185,15 +186,17 @@ public class Graph {
     }
 
 
-    void dfsTraversalRec(int s, Map<Integer,Boolean> visited) {
+    void dfsTraversalRec(int s, Map<Integer, Boolean> visited) {
         visited.put(s, true);
+//        Visiting of node
         System.out.print(s + " ");
 
         Node source = getNode(s);
         Iterator<Node> i = source.neighbors.listIterator();
         while (i.hasNext()) {
             Node n = i.next();
-            if (!visited.getOrDefault(n.id,false))
+//            Exploration of node
+            if (!visited.getOrDefault(n.id, false))
                 dfsTraversalRec(n.id, visited);
         }
     }
@@ -201,27 +204,22 @@ public class Graph {
     void dfsTraversalIter(int s) {
 
         boolean nodes[] = new boolean[v];
-
         Node sourceNode = getNode(s);
         Stack<Node> stack = new Stack<>();
-
-        stack.push(sourceNode);                                    //push root node to the stack
-
+        stack.push(sourceNode);
         while (!stack.empty()) {
             Node rootNode = stack.peek();
             stack.pop();
-
             if (nodes[s] == false) {
+//            visiting of Vertex
                 System.out.print(rootNode.id + " ");
                 nodes[rootNode.id] = true;
             }
-
-            for (int i = 0; i < rootNode.neighbors.size(); i++)  //iterate through the linked list and then propagate to the next few nodes
-            {
+            for (int i = 0; i < rootNode.neighbors.size(); i++) {
+//                exploration of Vertex
                 Node a = rootNode.neighbors.get(i);
-                if (!nodes[a.id])                    //only push those nodes to the stack which aren't in it already
-                {
-                    stack.push(a);                          //push the top element to the stack
+                if (!nodes[a.id]) {
+                    stack.push(a);
                 }
             }
 
@@ -231,28 +229,26 @@ public class Graph {
 
     public boolean isValidGraph(int source, int destination) {
         if (source > v || destination > v) return false;
-        LinkedList<Node> temp;
-        boolean visited[] = new boolean[v];
+        boolean visiterMarker[] = new boolean[v];
         LinkedList<Node> queue = new LinkedList<Node>();
-        visited[source] = true;
+        visiterMarker[source] = true;
         queue.add(getNode(source));
-        Iterator<Node> i;
         while (queue.size() != 0) {
             Node disPlayNode = queue.poll();
-
-            int n;
-            i = disPlayNode.neighbors.listIterator();
+//Visiter
+            Iterator<Node> i = disPlayNode.neighbors.listIterator();
             while (i.hasNext()) {
+//                Exploration
                 Node nextNode = i.next();
                 if (nextNode.id == destination)
                     return true;
 
-                if (!visited[nextNode.id]) {
-                    visited[nextNode.id] = true;
+                if (!visiterMarker[nextNode.id]) {
+                    visiterMarker[nextNode.id] = true;
                     queue.add(nextNode);
                 }
             }
-          }
+        }
         return false;
 
 
@@ -260,7 +256,7 @@ public class Graph {
 
 
     public int findCentre() {
-        Iterator hmIterator = nodeLookup.entrySet().iterator();
+        Iterator hmIterator = verticesMap.entrySet().iterator();
 
         while (hmIterator.hasNext()) {
 
@@ -268,7 +264,8 @@ public class Graph {
                     = (Map.Entry) hmIterator.next();
             Node d = ((Node) mapElement.getValue());
 
-            int centreNode = nodeLookup.size() - 1;
+            int centreNode = verticesMap.size() - 1;
+//
             if (d.inDegree == centreNode)
                 return (int) mapElement.getKey();
 
@@ -283,47 +280,35 @@ public class Graph {
         Queue<Node> q = new LinkedList<Node>();
         q.add(source);
 
-        // An HashMap to keep track of all the
-        // nodes which have already been created
         HashMap<Node, Node> hm =
                 new HashMap<Node, Node>();
 
-        //Put the node into the HashMap
+        //Put the source node into the HashMap
         hm.put(source, new Node(source.id));
 
         while (!q.isEmpty()) {
-            // Get the front node from the queue
-            // and then visit all its neighbours
             Node u = q.poll();
 
-            // Get corresponding Cloned Graph Node
-            Node cloneNodeU = hm.get(u);
+//            visiting the vertex
+            Node outerClone = hm.get(u);
             if (u.neighbors != null) {
                 List<Node> v = u.neighbors;
                 for (Node graphNode : v) {
-                    // Get the corresponding cloned node
-                    // If the node is not cloned then we will
-                    // simply get a null
-                    Node cloneNodeG = hm.get(graphNode);
 
-                    // Check if this node has already been created
-                    if (cloneNodeG == null) {
+//                    exploring the vertex
+                    Node innerClone = hm.get(graphNode);
+
+                    if (innerClone == null) {
                         q.add(graphNode);
-
-                        // If not then create a new Node and
-                        // put into the HashMap
-                        cloneNodeG = new Node(graphNode.id);
-                        hm.put(graphNode, cloneNodeG);
+                        innerClone = new Node(graphNode.id);
+                        hm.put(graphNode, innerClone);
                     }
 
-                    // add the 'cloneNodeG' to neighbour
-                    // vector of the cloneNodeG
-                    cloneNodeU.neighbors.add(cloneNodeG);
+                    outerClone.neighbors.add(innerClone);
                 }
             }
         }
 
-        // Return the reference of cloned source Node
         return hm.get(source);
     }
 
@@ -339,21 +324,18 @@ public class Graph {
         while (!stack.empty()) {
             Node rootNode = stack.peek();
             stack.pop();
-
-            if (nodes[rootNode.id] == false) {
-                System.out.print(rootNode.id + " ");
+//vister
+            if (!nodes[rootNode.id]) {
                 nodes[rootNode.id] = true;
             }
 
-            for (int i = 0; i < rootNode.neighbors.size(); i++)  //iterate through the linked list and then propagate to the next few nodes
-            {
+            for (int i = 0; i < rootNode.neighbors.size(); i++) {
                 Node nextNode = rootNode.neighbors.get(i);
-                if (!nodes[nextNode.id])                    //only push those nodes to the stack which aren't in it already
-                {
-                    stack.push(nextNode);                          //push the top element to the stack
+                if (!nodes[nextNode.id]) {
+                    stack.push(nextNode);
                 }
-
-                if (!nextNode.neighbors.isEmpty() && nextNode.neighbors.get(0).id ==rootNode.id)
+// exploration
+                if (!nextNode.neighbors.isEmpty() && nextNode.neighbors.get(0).id == rootNode.id)
                     return true;
             }
 
@@ -362,7 +344,7 @@ public class Graph {
     }
 
     public void dfsTraversal(int s) {
-        Map<Integer,Boolean> visiter  = new HashMap<>();
-        dfsTraversalRec(s,visiter);
+        Map<Integer, Boolean> visiter = new HashMap<>();
+        dfsTraversalRec(s, visiter);
     }
 }
