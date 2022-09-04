@@ -189,8 +189,8 @@ public class BinaryTree {
             return 0;
         int left = diameterRec(root.left);
         int right = diameterRec(root.right);
-        int rootNode = heightOfTree(root.left) + heightOfTree(root.right) + 1;
-        return Math.max(rootNode, Math.max(left, right));
+        int totalHeightOfTree = heightOfTree(root.left) + heightOfTree(root.right) + 1;
+        return Math.max(totalHeightOfTree, Math.max(left, right));
     }
 
     //    ON^1

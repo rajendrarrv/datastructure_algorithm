@@ -28,7 +28,7 @@ public class BinarySearchTree extends BinaryTree {
     private boolean searchRec(TreeNode root, int key) {
         if (root == null)
             return false;
-        if (root.val > key) {
+        if (key< root.left.val) {
             return searchRec(root.left, key);
         } else if (root.val == key) {
             return true;
@@ -43,23 +43,27 @@ public class BinarySearchTree extends BinaryTree {
     }
 
     private TreeNode deleteRec(TreeNode root, int key) {
+//        based on sorting
         if (root.val > key) {
             root.left = deleteRec(root.left, key);
         } else if (root.val < key) {
             root.right = deleteRec(root.right, key);
         } else {
-// case 1 leaf Node
+
+            // case 1 leaf Node
             if (root.left == null && root.right == null) {
                 return null;
             }
 
-// case 2 root.left =null
+
+            // case 2 root.left =null
             if (root.left == null) {
                 return root.right;
             } else if (root.right == null) {
                 return root.left;
             }
-//             case 3 inorder successor
+
+            //             case 3 inorder successor
             TreeNode is = inorderSuccessor(root.right);
             root.val = is.val;
             root.right = deleteRec(root.right, is.val);
@@ -69,6 +73,7 @@ public class BinarySearchTree extends BinaryTree {
         return root;
     }
 
+//    left most element in right successor
     private TreeNode inorderSuccessor(TreeNode root) {
         while (root.left != null)
             root = root.left;
@@ -82,7 +87,8 @@ public class BinarySearchTree extends BinaryTree {
             root = new TreeNode(data);
             return root;
         }
-        if (root.val > data) {
+//         the smaller value always goes to the left side of tree and vice vera
+        if (data<root.val) {
             root.left = insert(root.left, data);
         } else {
             root.right = insert(root.right, data);
@@ -143,6 +149,7 @@ public class BinarySearchTree extends BinaryTree {
         return sortedArrayToBstRec(nums, 0, nums.length - 1);
     }
 
+
     public TreeNode sortedArrayToBstRec(int[] nums, int start, int end) {
         if (start > end) {
             return null;
@@ -151,21 +158,45 @@ public class BinarySearchTree extends BinaryTree {
         TreeNode treeNode = new TreeNode(nums[mid]);
         treeNode.left = sortedArrayToBstRec(nums, start, mid - 1);
         treeNode.right = sortedArrayToBstRec(nums, mid + 1, end);
-    return treeNode;
+        return treeNode;
     }
+
+
+
 
     public static void main(String[] args) {
         BinarySearchTree bst = new BinarySearchTree();
-        int data[] = {5, 1, 3, 4, 2, 7};
+        int data[] = {6, 2, 0, 4, 3, 5, 8, 7, 9};
         bst.buildTree(data);
         System.out.println("In order display");
         bst.levelOrderDisplay();
-        System.out.println();
-        System.out.println("Print in the range 1 to 5");
-        bst.printInRange(1, 3);
-        // bst.printRootToLeaf();
+        bst.listCommonAnsisters(7, 9);
 
     }
 
+    private TreeNode listCommonAnsisters(int p, int q) {
+         return listCommonAnsistersRec(root, p, q);
 
+
+    }
+
+    private TreeNode listCommonAnsistersRec(TreeNode root, int n1, int n2) {
+
+        if (root == null)
+            return null;
+
+        // If both n1 and n2 are smaller than root, then LCA lies in left
+        if (root.val > n1 && root.val > n2)
+            return listCommonAnsistersRec(root.left, n1, n2);
+
+        // If both n1 and n2 are greater than root, then LCA lies in right
+        if (root.val < n1 && root.val < n2)
+            return listCommonAnsistersRec(root.right, n1, n2);
+
+        return root;
+
+    }
 }
+
+
+
