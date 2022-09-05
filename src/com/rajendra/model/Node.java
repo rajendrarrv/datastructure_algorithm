@@ -30,10 +30,10 @@ public class Node {
 
     public Node(int id) {
         this.id = id;
-        neighbors = new ArrayList<Node>();
+        neighbors =new LinkedList<>();
     }
 
-    public Node(int id, ArrayList<Node> _neighbors) {
+    public Node(int id, LinkedList<Node> _neighbors) {
         this.id = id;
         neighbors = _neighbors;
     }

@@ -3,8 +3,16 @@ package com.rajendra.collection;
 import com.rajendra.model.TreeInfo;
 import com.rajendra.model.TreeNode;
 
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Deque;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Queue;
 
 /**
@@ -17,27 +25,6 @@ public class BinaryTree {
 
     public void buildTree(int data[]) {
         root = buildTreeRec(data);
-    }
-
-    public void buildTree(List<Integer> data) {
-        root = buildTreeRec(data);
-    }
-
-
-    private TreeNode buildTreeRec(List<Integer> data) {
-        index++;
-
-        if (data.size() <= index) {
-            return null;
-        }
-//        if (data.get(index) == null) {
-//            return null;
-//        }
-//        pre order traversal
-        TreeNode newNode = new TreeNode(data.get(index));
-        newNode.left = buildTreeRec(data);
-        newNode.right = buildTreeRec(data);
-        return newNode;
     }
 
 
@@ -207,8 +194,8 @@ public class BinaryTree {
             return 0;
         int left = diameterRec(root.left);
         int right = diameterRec(root.right);
-        int rootNode = heightOfTree(root.left) + heightOfTree(root.right) + 1;
-        return Math.max(rootNode, Math.max(left, right));
+        int totalHeightOfTree = heightOfTree(root.left) + heightOfTree(root.right) + 1;
+        return Math.max(totalHeightOfTree, Math.max(left, right));
     }
 
     //    ON^1
@@ -235,11 +222,10 @@ public class BinaryTree {
 
     public static void main(String[] args) {
         BinaryTree binaryTree = new BinaryTree();
-        int[] data = {1, 2, -1, -1, 3, 4, -1, -1};
+        int[] data = {1, -1, 2, 2, -1, -1};
         binaryTree.buildTree(data);
         System.out.println("");
-        binaryTree.levelOrderDisplay();
-
+        binaryTree.findMode();
 
     }
 
@@ -444,6 +430,105 @@ public class BinaryTree {
         node.right = left;
 
         return node;
+
+    }
+
+    public List<String> binaryTreePaths() {
+        Deque<Integer> path = new ArrayDeque<>();
+        List<String> ans = new ArrayList<>();
+        binaryTreePathsRec(root, path, ans);
+        return ans;
+    }
+
+    private void binaryTreePathsRec(TreeNode root, Deque<Integer> path, List<String> ans) {
+        // base case
+        if (root == null) {
+            return;
+        }
+        path.addLast(root.val);
+        if (isLeaf(root)) {
+            StringBuilder sb = new StringBuilder();
+            ArrayList list = new ArrayList(path);
+            for (int i = 0; i < list.size(); i++) {
+                sb.append(list.get(i) + "->");
+            }
+            CharSequence sequence = sb.subSequence(0, sb.length() - 2);
+            ans.add(sequence.toString());
+        }
+
+        binaryTreePathsRec(root.left, path, ans);
+        binaryTreePathsRec(root.right, path, ans);
+        if (!path.isEmpty())
+            path.removeLast();
+    }
+
+    public int leftLeavesSum() {
+        return leftLeavesSumRec(this.root);
+    }
+
+
+    int leftLeavesSumRec(TreeNode node) {
+        int res = 0;
+        if (node != null) {
+            if (isLeaf(node.left))
+                res += node.left.val;
+            else
+                res += leftLeavesSumRec(node.left);
+            res += leftLeavesSumRec(node.right);
+        }
+        return res;
+    }
+
+    public boolean isLeaf(TreeNode node) {
+        return (node.left == null && node.right == null);
+    }
+
+
+    public int mode(int[] array) {
+        int mode = array[0];
+        int maxCount = 0;
+        for (int i = 0; i < array.length; i++) {
+            int value = array[i];
+            int count = 0;
+            for (int j = 0; j < array.length; j++) {
+                if (array[j] == value) count++;
+                if (count > maxCount) {
+                    mode = value;
+                    maxCount = count;
+                }
+            }
+        }
+        if (maxCount > 1) {
+            return mode;
+        }
+        return 0;
+    }
+
+    public int[] findMode() {
+//        todo    do it latter
+        Map<Integer, Integer> frequencyMap = new HashMap<>();
+
+        treeFreqRec(this.root, frequencyMap);
+        System.out.println("" + frequencyMap);
+        int re[] = new int[frequencyMap.size()];
+        int index = 0;
+        for (Map.Entry<Integer, Integer> entry : frequencyMap.entrySet()) {
+            System.out.println("Key = " + entry.getKey() +
+                    ", Value = " + entry.getValue());
+            re[index] = entry.getValue();
+        }
+
+
+        return re;
+    }
+
+    private void treeFreqRec(TreeNode root, Map<Integer, Integer> frequencyMap) {
+
+        if (root == null)
+            return;
+        frequencyMap.put(root.val, frequencyMap.getOrDefault(root.val, 0) + 1);
+        treeFreqRec(root.left, frequencyMap);
+        treeFreqRec(root.right, frequencyMap);
 
     }
 

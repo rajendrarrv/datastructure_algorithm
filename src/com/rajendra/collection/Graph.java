@@ -118,7 +118,7 @@ public class Graph {
         return -1;
     }
 
-    // has connection inbetween source and destination
+    // has connection in between source and destination
     public boolean hasEdge(int source, int destination) {
         Node s = getNode(source);
         Node d = getNode(destination);
@@ -164,8 +164,10 @@ public class Graph {
 
 
     public void bfsTraversal(Node source) {
+
+
         Map<Integer, Boolean> visited = new HashMap<>();
-        LinkedList<Node> queue = new LinkedList<>();
+        Queue<Node> queue = new LinkedList<>();
         visited.put(source.id, true);
         queue.add(source);
         while (!queue.isEmpty()) {
@@ -346,5 +348,13 @@ public class Graph {
     public void dfsTraversal(int s) {
         Map<Integer, Boolean> visiter = new HashMap<>();
         dfsTraversalRec(s, visiter);
+    }
+
+    public static void main(String[] args) {
+        Graph graph  = new Graph(4);
+        graph.setType(Graph.BI_DIRECTIONAL);
+        int [][] data  = {{0,1},{1,3},{2,3},{2,0}};
+        graph.build(data);
+        graph.bfsTraversal(0);
     }
 }
