@@ -3,6 +3,14 @@ package com.rajendra.collection;
 import com.rajendra.model.TreeNode;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Rajendra Verma on 30/08/22.
@@ -28,7 +36,7 @@ public class BinarySearchTree extends BinaryTree {
     private boolean searchRec(TreeNode root, int key) {
         if (root == null)
             return false;
-        if (key< root.left.val) {
+        if (key < root.left.val) {
             return searchRec(root.left, key);
         } else if (root.val == key) {
             return true;
@@ -73,7 +81,7 @@ public class BinarySearchTree extends BinaryTree {
         return root;
     }
 
-//    left most element in right successor
+    //    left most element in right successor
     private TreeNode inorderSuccessor(TreeNode root) {
         while (root.left != null)
             root = root.left;
@@ -88,7 +96,7 @@ public class BinarySearchTree extends BinaryTree {
             return root;
         }
 //         the smaller value always goes to the left side of tree and vice vera
-        if (data<root.val) {
+        if (data < root.val) {
             root.left = insert(root.left, data);
         } else {
             root.right = insert(root.right, data);
@@ -161,21 +169,76 @@ public class BinarySearchTree extends BinaryTree {
         return treeNode;
     }
 
+    public int[] findMode() {
+        Map<Integer, Integer> map = new HashMap<>();
+        if (this.root.left ==null && this.root.right ==null){
+            return  new int[]{this.root.val};
+        }
+// frequncy Map
+        progress(this.root, map);
+        List<Map.Entry<Integer, Integer>> list =
+                new LinkedList<Map.Entry<Integer, Integer>>(map.entrySet());
 
+        // Sort the list
+        Collections.sort(list, new Comparator<Map.Entry<Integer, Integer>>() {
+            public int compare(Map.Entry<Integer, Integer> o1,
+                               Map.Entry<Integer, Integer> o2) {
+                return (o1.getValue()).compareTo(o2.getValue());
+            }
+        });
+
+        int singleModeValue = list.get(list.size() - 1).getValue();
+        if (list.size()==0)
+            return  new int[]{0};
+        int count = list.size() - 1;
+        List<Integer> ans = new ArrayList<>();
+//        collecting the similar   mode value
+        while (count >= 0) {
+
+            int key = list.get(count).getKey();
+            int val = list.get(count).getValue();
+            if (singleModeValue == val)
+                ans.add(key);
+
+
+            count--;
+        }
+       ArrayList d  = (ArrayList) ans;
+        d.trimToSize();
+        Integer array[] = ((List<Integer>)d).toArray(new Integer[d.size()]);  //2
+        int [] a  = new int[array.length];
+
+        for (int i = 0; i < array.length; i++) {
+            a[i]  = array[i];
+        }
+        return a;
+
+    }
+
+
+    private void progress(TreeNode root, Map<Integer, Integer> map) {
+        if (root == null)
+            return;
+        if (map.containsKey(root.val)) {
+            map.put(root.val, map.get(root.val) + 1);
+        } else {
+            map.put(root.val, 1);
+        }
+        progress(root.left, map);
+        progress(root.right, map);
+
+    }
 
 
     public static void main(String[] args) {
         BinarySearchTree bst = new BinarySearchTree();
-        int data[] = {6, 2, 0, 4, 3, 5, 8, 7, 9};
+        int data[] = {1};
         bst.buildTree(data);
-        System.out.println("In order display");
-        bst.levelOrderDisplay();
-        bst.listCommonAnsisters(7, 9);
-
+        System.out.println("Mode is "+ Arrays.toString(bst.findMode()));
     }
 
     private TreeNode listCommonAnsisters(int p, int q) {
-         return listCommonAnsistersRec(root, p, q);
+        return listCommonAnsistersRec(root, p, q);
 
 
     }
@@ -185,11 +248,9 @@ public class BinarySearchTree extends BinaryTree {
         if (root == null)
             return null;
 
-        // If both n1 and n2 are smaller than root, then LCA lies in left
         if (root.val > n1 && root.val > n2)
             return listCommonAnsistersRec(root.left, n1, n2);
 
-        // If both n1 and n2 are greater than root, then LCA lies in right
         if (root.val < n1 && root.val < n2)
             return listCommonAnsistersRec(root.right, n1, n2);
 
