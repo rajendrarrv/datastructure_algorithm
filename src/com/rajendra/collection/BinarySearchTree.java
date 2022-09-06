@@ -1,5 +1,6 @@
 package com.rajendra.collection;
 
+import com.rajendra.model.TreeInfo;
 import com.rajendra.model.TreeNode;
 
 import java.util.ArrayList;
@@ -271,7 +272,7 @@ Algorithm
 1. Take two pointers current and previous
 2. perform inorder traversal with current
 3. point the  previous  just prev with current
-4. min the iterative min at the visiter point
+4. min the iterative min at the visitor point
 5. return the min
 
  */
