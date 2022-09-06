@@ -221,11 +221,6 @@ public class BinaryTree {
 
 
     public static void main(String[] args) {
-        BinaryTree binaryTree = new BinaryTree();
-        int[] data = {1, -1, 2, 2, -1, -1};
-        binaryTree.buildTree(data);
-        System.out.println("");
-        binaryTree.findMode();
 
     }
 
@@ -504,33 +499,32 @@ public class BinaryTree {
         return 0;
     }
 
-    public int[] findMode() {
-//        todo    do it latter
-        Map<Integer, Integer> frequencyMap = new HashMap<>();
 
-        treeFreqRec(this.root, frequencyMap);
-        System.out.println("" + frequencyMap);
-        int re[] = new int[frequencyMap.size()];
-        int index = 0;
-        for (Map.Entry<Integer, Integer> entry : frequencyMap.entrySet()) {
-            System.out.println("Key = " + entry.getKey() +
-                    ", Value = " + entry.getValue());
-            re[index] = entry.getValue();
-        }
-
-
-        return re;
+    public int findTilt(){
+        return  findTilt(this.root);
     }
 
-    private void treeFreqRec(TreeNode root, Map<Integer, Integer> frequencyMap) {
+    private int findTilt(TreeNode root) {
 
+        TreeInfo t = new TreeInfo(0);
+        tiltInOrderTraverse(root, t);
+        return t.tilt;
+
+    }
+
+    private int tiltInOrderTraverse(TreeNode root, TreeInfo t) {
         if (root == null)
-            return;
-        frequencyMap.put(root.val, frequencyMap.getOrDefault(root.val, 0) + 1);
-        treeFreqRec(root.left, frequencyMap);
-        treeFreqRec(root.right, frequencyMap);
+            return 0;
 
+        // Compute tilts of left and right subtrees
+        // and find sums of left and right subtrees
+        int left = tiltInOrderTraverse(root.left, t);
+        int right = tiltInOrderTraverse(root.right, t);
+
+        // Add current tilt to overall
+        t.tilt += Math.abs(left - right);
+
+        // Returns sum of nodes under current tree
+        return left + right + root.val;
     }
-
-
 }
