@@ -102,7 +102,6 @@ public class BinaryTree {
         if (root.val != subtree.val) {
             return false;
         }
-
         return isIdentical(root.left, subtree.left) && isIdentical(root.right, subtree.right);
     }
 
@@ -221,6 +220,20 @@ public class BinaryTree {
 
 
     public static void main(String[] args) {
+//        [3,4,5,1,2]
+        int rootData[] = {1, 3, 5, -1, -1, 2, -1, -1};
+        int rootSubTree[] = {2, 1, -1, 4, -1, -1, 3,-1,7,-1,-1};
+        BinaryTree rootRoot = new BinaryTree();
+        rootRoot.buildTree(rootData);
+        System.out.println("Root");
+        rootRoot.levelOrderDisplay();
+        System.out.println("Sub tree");
+        BinaryTree subRoot = new BinaryTree();
+        subRoot.buildTree(rootSubTree);
+        subRoot.levelOrderDisplay();
+        rootRoot.merge(subRoot.root);
+        System.out.println("Merge result");
+        rootRoot.levelOrderDisplay();
 
     }
 
@@ -257,32 +270,6 @@ public class BinaryTree {
         return height;
     }
 
-    static boolean flag = false;
-
-    public boolean isSameTree(TreeNode p, TreeNode q) {
-        ;
-        return isSameTreeRec(p, q);
-    }
-
-    public boolean isSameTreeRec(TreeNode p, TreeNode q) {
-        if (p == null && q == null) {
-            return true;
-        }
-        if (p == null) {
-            return false;
-        }
-        if (q == null) {
-            return false;
-        }
-
-        flag = isSameTreeRec(p.left, q.left);
-        if (p.val != q.val) {
-            return false;
-        }
-        flag = isSameTreeRec(p.right, q.right);
-
-        return flag;
-    }
 
     private int heightOfTree(TreeNode root) {
         if (root == null)
@@ -479,29 +466,8 @@ public class BinaryTree {
     }
 
 
-    public int mode(int[] array) {
-        int mode = array[0];
-        int maxCount = 0;
-        for (int i = 0; i < array.length; i++) {
-            int value = array[i];
-            int count = 0;
-            for (int j = 0; j < array.length; j++) {
-                if (array[j] == value) count++;
-                if (count > maxCount) {
-                    mode = value;
-                    maxCount = count;
-                }
-            }
-        }
-        if (maxCount > 1) {
-            return mode;
-        }
-        return 0;
-    }
-
-
-    public int findTilt(){
-        return  findTilt(this.root);
+    public int findTilt() {
+        return findTilt(this.root);
     }
 
     private int findTilt(TreeNode root) {
@@ -516,15 +482,74 @@ public class BinaryTree {
         if (root == null)
             return 0;
 
-        // Compute tilts of left and right subtrees
-        // and find sums of left and right subtrees
         int left = tiltInOrderTraverse(root.left, t);
         int right = tiltInOrderTraverse(root.right, t);
-
-        // Add current tilt to overall
         t.tilt += Math.abs(left - right);
 
-        // Returns sum of nodes under current tree
         return left + right + root.val;
     }
+
+    public boolean isSubtree(TreeNode root, TreeNode subRoot) {
+        if (root == null)
+            return true;
+        if (subRoot == null)
+            return false;
+        if (isIdentical(subRoot, root))
+            return true;
+        return isSubtree(subRoot.left, root)
+                || isSubtree(subRoot.right, root);
+    }
+
+    StringBuilder str = new StringBuilder();
+
+    public String toSTR() {
+        treeToString(this.root);
+        return str.toString();
+    }
+
+
+    public void treeToString(TreeNode root) {
+//      todo will solve later
+        // bases case
+        if (root == null) {
+//            str.append("()");
+            return;
+        }
+        str.append(root.val);
+        // for left subtree
+        if (root.left != null)
+            str.append("(");
+
+        treeToString(root.left);
+        if (root.right != null)
+            str.append(")");
+
+        treeToString(root.right);
+
+
+    }
+
+    public void merge(TreeNode subtree) {
+        merge(this.root, subtree);
+    }
+    TreeNode mergeTree = new TreeNode(0);
+
+    private void merge(TreeNode root, TreeNode subtree) {
+
+        this.root =mergeTreeRec(root, subtree);;
+        levelOrderDisplay();
+    }
+
+    private TreeNode mergeTreeRec(TreeNode root, TreeNode subtree) {
+        if (root == null)
+            return subtree;
+        if (subtree == null)
+            return root;
+        root.val += subtree.val;
+        root.left = mergeTreeRec(root.left, subtree.left);
+        root.right = mergeTreeRec(root.right, subtree.right);
+        return root;
+        }
+
 }
+
