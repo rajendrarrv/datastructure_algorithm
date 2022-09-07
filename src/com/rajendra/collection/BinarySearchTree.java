@@ -237,9 +237,13 @@ public class BinarySearchTree extends BinaryTree {
 
     public static void main(String[] args) {
         BinarySearchTree bst = new BinarySearchTree();
-        int data[] = {1, 0, 48, 12, 493};
+        int data[] = {4,2,1,3,7};
         bst.buildTree(data);
-        System.out.println("Minimum Absolute Difference " + bst.getMinimumDifference());
+        System.out.println();
+        bst.levelOrderDisplay();
+        System.out.println("SBST");
+        bst.searchBST(2);
+//        bst.searchBST(2);
     }
 
     private TreeNode listCommonAnsisters(int p, int q) {
@@ -298,6 +302,24 @@ Algorithm
         prev = curr;
         inOrder(curr.right);
 
+
+    }
+    public  void  searchBST(int key){
+        TreeNode d  = searchRecBST(this.root,key);
+this.root  =d;
+levelOrderDisplay();
+    }
+    private TreeNode searchRecBST(TreeNode root, int key) {
+        if (root == null  || root.left ==null )
+            return null;
+
+        if ( key < root.val ) {
+            return searchRecBST(root.left, key);
+        } else if (root.val == key) {
+            return root;
+        } else {
+            return searchRecBST(root.right, key);
+        }
 
     }
 }
