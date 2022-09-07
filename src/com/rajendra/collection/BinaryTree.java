@@ -3,17 +3,19 @@ package com.rajendra.collection;
 import com.rajendra.model.TreeInfo;
 import com.rajendra.model.TreeNode;
 
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Deque;
-import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.Queue;
+import java.util.Set;
 
 /**
  * Created by Rajendra Verma on 28/08/22.
@@ -102,7 +104,6 @@ public class BinaryTree {
         if (root.val != subtree.val) {
             return false;
         }
-
         return isIdentical(root.left, subtree.left) && isIdentical(root.right, subtree.right);
     }
 
@@ -221,11 +222,13 @@ public class BinaryTree {
 
 
     public static void main(String[] args) {
-        BinaryTree binaryTree = new BinaryTree();
-        int[] data = {1, -1, 2, 2, -1, -1};
-        binaryTree.buildTree(data);
-        System.out.println("");
-        binaryTree.findMode();
+//        [3,4,5,1,2]
+        int rootData[] = {10, 5, 3, -1, -1, 7, -1, -1, 15, 18, -1, -1};
+        BinaryTree rootRoot = new BinaryTree();
+        rootRoot.buildTree(rootData);
+        System.out.println();
+        rootRoot.levelOrderDisplay();
+        System.out.println("Range =" + rootRoot.rangeSumBST(7, 15));
 
     }
 
@@ -262,32 +265,6 @@ public class BinaryTree {
         return height;
     }
 
-    static boolean flag = false;
-
-    public boolean isSameTree(TreeNode p, TreeNode q) {
-        ;
-        return isSameTreeRec(p, q);
-    }
-
-    public boolean isSameTreeRec(TreeNode p, TreeNode q) {
-        if (p == null && q == null) {
-            return true;
-        }
-        if (p == null) {
-            return false;
-        }
-        if (q == null) {
-            return false;
-        }
-
-        flag = isSameTreeRec(p.left, q.left);
-        if (p.val != q.val) {
-            return false;
-        }
-        flag = isSameTreeRec(p.right, q.right);
-
-        return flag;
-    }
 
     private int heightOfTree(TreeNode root) {
         if (root == null)
@@ -484,53 +461,310 @@ public class BinaryTree {
     }
 
 
-    public int mode(int[] array) {
-        int mode = array[0];
-        int maxCount = 0;
-        for (int i = 0; i < array.length; i++) {
-            int value = array[i];
-            int count = 0;
-            for (int j = 0; j < array.length; j++) {
-                if (array[j] == value) count++;
-                if (count > maxCount) {
-                    mode = value;
-                    maxCount = count;
+    public int findTilt() {
+        return findTilt(this.root);
+    }
+
+    private int findTilt(TreeNode root) {
+
+        TreeInfo t = new TreeInfo(0);
+        tiltInOrderTraverse(root, t);
+        return t.tilt;
+
+    }
+
+    private int tiltInOrderTraverse(TreeNode root, TreeInfo t) {
+        if (root == null)
+            return 0;
+
+        int left = tiltInOrderTraverse(root.left, t);
+        int right = tiltInOrderTraverse(root.right, t);
+        t.tilt += Math.abs(left - right);
+
+        return left + right + root.val;
+    }
+
+    public boolean isSubtree(TreeNode root, TreeNode subRoot) {
+        if (root == null)
+            return true;
+        if (subRoot == null)
+            return false;
+        if (isIdentical(subRoot, root))
+            return true;
+        return isSubtree(subRoot.left, root)
+                || isSubtree(subRoot.right, root);
+    }
+
+    StringBuilder str = new StringBuilder();
+
+    public String toSTR() {
+        treeToString(this.root);
+        return str.toString();
+    }
+
+
+    public void treeToString(TreeNode root) {
+//      todo will solve later
+        // bases case
+        if (root == null) {
+//            str.append("()");
+            return;
+        }
+        str.append(root.val);
+        // for left subtree
+        if (root.left != null)
+            str.append("(");
+
+        treeToString(root.left);
+        if (root.right != null)
+            str.append(")");
+
+        treeToString(root.right);
+
+
+    }
+
+    public void merge(TreeNode subtree) {
+        merge(this.root, subtree);
+    }
+
+    TreeNode mergeTree = new TreeNode(0);
+
+    private void merge(TreeNode root, TreeNode subtree) {
+
+        this.root = mergeTreeRec(root, subtree);
+        ;
+        levelOrderDisplay();
+    }
+
+    private TreeNode mergeTreeRec(TreeNode root, TreeNode subtree) {
+        if (root == null)
+            return subtree;
+        if (subtree == null)
+            return root;
+        root.val += subtree.val;
+        root.left = mergeTreeRec(root.left, subtree.left);
+        root.right = mergeTreeRec(root.right, subtree.right);
+        return root;
+    }
+
+    public List<String> averageOfLevels() {
+        List<String> result = new ArrayList<>();
+        if (root == null) {
+            return result;
+        }
+        Queue<TreeNode> queue = new LinkedList<TreeNode>();
+        queue.add(root);
+        queue.add(null);
+        result.add(roundAvoid(root.val, 1));
+        while (!queue.isEmpty()) {
+            TreeNode node = queue.remove();
+            if (node == null) {
+                System.out.println();
+                if (queue.isEmpty())
+                    break;
+                else queue.add(null);
+            } else {
+                System.out.print(node.val + ",");
+                if (node.left != null) {
+                    result.add(roundAvoid(node.left.val, 0));
+                }
+                if (node.left != null && node.right != null) {
+                    double d = (double) (node.left.val + node.right.val) / 2;
+
+                    result.add(roundAvoid(d, 50));
+                }
+                if (node.left != null)
+                    queue.add(node.left);
+                if (node.right != null)
+                    queue.add(node.right);
+
+
+            }
+
+
+        }
+        return result;
+
+    }
+
+    public boolean findTarget(int k) {
+//        todo failed on submission
+        int countpairs = 0;
+        List<Integer> allelemens = new ArrayList<>();
+        collectElement(this.root, allelemens);
+        for (int i = 0; i < allelemens.size(); i++) {
+            int x = allelemens.get(i);
+            for (int j = i + 1; j < allelemens.size(); j++) {
+
+                if (k == x + allelemens.get(j)) {
+                    countpairs++;
                 }
             }
         }
-        if (maxCount > 1) {
-            return mode;
-        }
-        return 0;
+
+        if (countpairs == 0) return false;
+        else return ((allelemens.size() / 2) == countpairs);
     }
 
-    public int[] findMode() {
-//        todo    do it latter
-        Map<Integer, Integer> frequencyMap = new HashMap<>();
-
-        treeFreqRec(this.root, frequencyMap);
-        System.out.println("" + frequencyMap);
-        int re[] = new int[frequencyMap.size()];
-        int index = 0;
-        for (Map.Entry<Integer, Integer> entry : frequencyMap.entrySet()) {
-            System.out.println("Key = " + entry.getKey() +
-                    ", Value = " + entry.getValue());
-            re[index] = entry.getValue();
-        }
-
-
-        return re;
-    }
-
-    private void treeFreqRec(TreeNode root, Map<Integer, Integer> frequencyMap) {
-
+    private void collectElement(TreeNode root, List<Integer> allElements) {
         if (root == null)
             return;
-        frequencyMap.put(root.val, frequencyMap.getOrDefault(root.val, 0) + 1);
-        treeFreqRec(root.left, frequencyMap);
-        treeFreqRec(root.right, frequencyMap);
+
+        allElements.add(root.val);
+        collectElement(root.left, allElements);
+        collectElement(root.right, allElements);
+
 
     }
 
+    public int findSecondMinimumValue() {
+        List<Integer> allelemens = new ArrayList<>();
+        collectElement(this.root, allelemens);
+        Set<Integer> set = new HashSet<>(allelemens);
+        Integer[] arr = set.toArray(new Integer[set.size()]);
+        Arrays.sort(arr);
+        if (arr.length >= 2) {
+            return arr[1];
+        }
+        return -1;
+    }
 
+
+    public List<Integer> listOfLeadNode() {
+        List<Integer> list = new ArrayList<>();
+
+        listOfLeadNodeRec(this.root, list);
+        return list;
+    }
+
+
+    private void listOfLeadNodeRec(TreeNode root, List<Integer> list) {
+        if (root == null) {
+            return;
+        }
+        if (isLeaf(root)) {
+
+            list.add(root.val);
+        }
+        listOfLeadNodeRec(root.left, list);
+        listOfLeadNodeRec(root.right, list);
+
+
+    }
+
+    public String roundAvoid(double value, int places) {
+        double amount = 15;
+        NumberFormat formatter = new DecimalFormat("#0.00000");
+        System.out.println("The Decimal Value is:" + formatter.format(value));
+        return formatter.format(value);
+    }
+
+    public int rangeSumBST(int low, int high) {
+        return rangeSumBST(this.root, low, high);
+    }
+
+    private int rangeSumBST(TreeNode root, int low, int high) {
+        TreeInfo info = new TreeInfo();
+        rangeSumBSTRec(root, low, high, info);
+        return info.sumRange;
+    }
+
+    private void rangeSumBSTRec(TreeNode root, int low, int high, TreeInfo info) {
+        if (root == null)
+            return;
+
+        if (low <= root.val && high >= root.val) {
+            info.sumRange = info.sumRange + root.val;
+        }
+        rangeSumBSTRec(root.left, low, high, info);
+        rangeSumBSTRec(root.right, low, high, info);
+    }
+
+    public boolean isUnivalTree(TreeNode root) {
+        return isUnivalTreeRec(root);
+    }
+
+    private boolean isUnivalTreeRec(TreeNode root) {
+        if (root == null) {
+            return true;
+        }
+
+        // If all the nodes on the left subtree
+        // have not value equal to root node
+        if (root.left != null
+                && root.val != root.left.val)
+            return false;
+
+        // If all the nodes on the left subtree
+        // have not value equal to root node
+        if (root.right != null
+                && root.val != root.right.val)
+            return false;
+
+        // Recurse on left and right subtree
+        return isUnivalTreeRec(root.left)
+                && isUnivalTreeRec(root.right);
+
+
+    }
+
+    TreeNode xParent = null;
+    TreeNode yParent = null;
+    int xDepth = 0;
+    int yDepth = 0;
+
+    public boolean isCousins(int x, int y) {
+        getDepthAndParent(root, x, y, 0, null);
+        return xDepth == yDepth && xParent != yParent ? true : false;
+    }
+
+    //get both the depth and parent for x and y
+    public void getDepthAndParent(TreeNode root, int x, int y, int depth, TreeNode parent) {
+        if (root == null) {
+            return;
+        }
+        if (root.val == x) {
+            xParent = parent;
+            xDepth = depth;
+        } else if (root.val == y) {
+            yParent = parent;
+            yDepth = depth;
+        } else {
+            getDepthAndParent(root.left, x, y, depth + 1, root);
+            getDepthAndParent(root.right, x, y, depth + 1, root);
+        }
+    }
+
+
+
+    private int sumRootToLeafRec(TreeNode root, int current) {
+        if (root == null) {
+            return 0;
+        }
+// dinary to decimal 😆
+        current = 2 * current + root.val;
+
+        if (root.left == null && root.right == null) {
+            return current;
+        }
+
+        return sumRootToLeafRec(root.left, current) + sumRootToLeafRec(root.right, current);
+
+    }
+
+    public boolean checkTree(TreeNode root) {
+        if (root == null) return false;
+        if (root.left == null && root.right ==null){
+            return false;
+        }
+
+        if (root.left == null || root.right ==null){
+            return false;
+        }
+
+        return (root.val == root.left.val +root.right.val);
+
+    }
 }
+

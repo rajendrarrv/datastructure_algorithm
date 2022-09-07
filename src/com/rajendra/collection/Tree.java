@@ -3,6 +3,7 @@ package com.rajendra.collection;
 import com.rajendra.model.Node;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
@@ -12,6 +13,7 @@ import java.util.Queue;
  */
 public class Tree {
     private Node root;
+    private  int depth;
 
     public Tree(Node root) {
         this.root = root;
@@ -39,20 +41,15 @@ public class Tree {
     }
 
     public static void main(String[] args) {
-        int data[] = {1, -1, 3, 2, 4, -1, 5, 6};
 
         Node root = new Node(1);
         root.neighbors.add(new Node(3));
-        root.neighbors.get(0).neighbors.add(new Node(5));
-        root.neighbors.get(0).neighbors.add(new Node(6));
         root.neighbors.add(new Node(2));
-        root.neighbors.add(new Node(4));
+        root.neighbors.add(new Node(1));
+        root.neighbors.get(3-1).neighbors.add(new Node(5));
+        root.neighbors.get(3-1).neighbors.add(new Node(6));
         Tree tree = new Tree(root);
-        tree.levelOrderTraversal();
-//        tree.preOrderTraversal();
-//        tree.inOrderTraversal();
-        tree.postOrderTraveral();
-        List<Integer> result = tree.postOrderTraveralLeetCode();
+        System.out.println( "Max depth "+tree.depth());
     }
 
     private List<Integer> postOrderTraveralLeetCode() {
@@ -126,12 +123,12 @@ public class Tree {
 
     }
 
-    public List<List<Integer>> levelOrderTraveralLeetCode() {
-        return levelOrderTraveralLeetCodeRec(this.root);
+    public List<List<Integer>> levelOrderTraversalLeetCode() {
+        return levelOrderTraversalLeetCodeRec(this.root);
 
     }
 
-    private List<List<Integer>> levelOrderTraveralLeetCodeRec(Node root) {
+    private List<List<Integer>> levelOrderTraversalLeetCodeRec(Node root) {
         List<List<Integer>> result = new ArrayList<>();
         if (root == null) return result;
         Queue<Node> queue = new LinkedList<>();
@@ -165,4 +162,39 @@ public class Tree {
         }
     }
 
+    public int depth(){
+        return  maxDepth(this.root);
+    }
+
+/*
+Algorithm
+
+1. perform level order traversal
+2. increase the value of depth at each level
+3. return the level
+ */
+
+    private int maxDepth(Node root) {
+        if (root == null) return 0;
+        depth  =0;
+        Queue<Node> queue = new LinkedList<>();
+        queue.offer(root);
+        while (!queue.isEmpty()) {
+            int len = queue.size();
+            List<Integer> innerList = new ArrayList<>();
+            for (int i = 0; i < len; i++) {
+                Node node = queue.poll();
+                innerList.add(node.val);
+                for (Node item : node.neighbors) {
+                    queue.offer(item);
+                }
+            }
+            depth++;
+
+        }
+        return depth;
+
+    }
 }
+
+

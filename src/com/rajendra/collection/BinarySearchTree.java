@@ -1,5 +1,6 @@
 package com.rajendra.collection;
 
+import com.rajendra.model.TreeInfo;
 import com.rajendra.model.TreeNode;
 
 import java.util.ArrayList;
@@ -16,6 +17,10 @@ import java.util.Map;
  * Created by Rajendra Verma on 30/08/22.
  */
 public class BinarySearchTree extends BinaryTree {
+    private TreeNode current = root;
+    private TreeNode prev = null;
+    private int minAbsoluteDifferene;
+
     @Override
     public void buildTree(int[] data) {
         for (int i = 0; i < data.length; i++) {
@@ -171,8 +176,8 @@ public class BinarySearchTree extends BinaryTree {
 
     public int[] findMode() {
         Map<Integer, Integer> map = new HashMap<>();
-        if (this.root.left ==null && this.root.right ==null){
-            return  new int[]{this.root.val};
+        if (this.root.left == null && this.root.right == null) {
+            return new int[]{this.root.val};
         }
 // frequncy Map
         progress(this.root, map);
@@ -188,8 +193,8 @@ public class BinarySearchTree extends BinaryTree {
         });
 
         int singleModeValue = list.get(list.size() - 1).getValue();
-        if (list.size()==0)
-            return  new int[]{0};
+        if (list.size() == 0)
+            return new int[]{0};
         int count = list.size() - 1;
         List<Integer> ans = new ArrayList<>();
 //        collecting the similar   mode value
@@ -203,13 +208,13 @@ public class BinarySearchTree extends BinaryTree {
 
             count--;
         }
-       ArrayList d  = (ArrayList) ans;
+        ArrayList d = (ArrayList) ans;
         d.trimToSize();
-        Integer array[] = ((List<Integer>)d).toArray(new Integer[d.size()]);  //2
-        int [] a  = new int[array.length];
+        Integer array[] = ((List<Integer>) d).toArray(new Integer[d.size()]);  //2
+        int[] a = new int[array.length];
 
         for (int i = 0; i < array.length; i++) {
-            a[i]  = array[i];
+            a[i] = array[i];
         }
         return a;
 
@@ -232,9 +237,13 @@ public class BinarySearchTree extends BinaryTree {
 
     public static void main(String[] args) {
         BinarySearchTree bst = new BinarySearchTree();
-        int data[] = {1};
+        int data[] = {4, 2, 1, 3, 7};
         bst.buildTree(data);
-        System.out.println("Mode is "+ Arrays.toString(bst.findMode()));
+        System.out.println();
+        bst.levelOrderDisplay();
+        System.out.println("SBST");
+        bst.listOfLeadNode();
+//        bst.searchBST(2);
     }
 
     private TreeNode listCommonAnsisters(int p, int q) {
@@ -256,6 +265,82 @@ public class BinarySearchTree extends BinaryTree {
 
         return root;
 
+    }
+
+    public int getMinimumDifference() {
+        return getMinimumDifference(this.root);
+    }
+
+/*
+Algorithm
+1. Take two pointers current and previous
+2. perform inorder traversal with current
+3. point the  previous  just prev with current
+4. min the iterative min at the visitor point
+5. return the min
+
+ */
+
+
+    public int getMinimumDifference(TreeNode root) {
+        current = root;
+        prev = null;
+        minAbsoluteDifferene = Integer.MAX_VALUE;
+
+        inOrder(current);
+        return minAbsoluteDifferene;
+    }
+
+    private void inOrder(TreeNode curr) {
+        if (curr == null)
+            return;
+        inOrder(curr.left);
+
+        if (prev != null)
+            minAbsoluteDifferene = Math.min(curr.val -
+                    prev.val, minAbsoluteDifferene);
+        prev = curr;
+        inOrder(curr.right);
+
+
+    }
+
+    public void searchBST(int key) {
+        TreeNode d = searchRecBST(this.root, key);
+        this.root = d;
+        levelOrderDisplay();
+    }
+
+    private TreeNode searchRecBST(TreeNode root, int key) {
+        if (root == null || root.left == null)
+            return null;
+
+        if (key < root.val) {
+            return searchRecBST(root.left, key);
+        } else if (root.val == key) {
+            return root;
+        } else {
+            return searchRecBST(root.right, key);
+        }
+
+    }
+
+
+    public int rangeSumBST(TreeNode root, int low, int high) {
+        TreeInfo info = new TreeInfo();
+        rangeSumBSTRec(root, low, high, info);
+        return info.sumRange;
+    }
+
+    private void rangeSumBSTRec(TreeNode root, int low, int high, TreeInfo info) {
+        if (root == null)
+            return;
+
+        if (low<=root.val || high>= root.val){
+            info.sumRange = info.sumRange+root.val;
+        }
+        rangeSumBSTRec(root.left,low,high,info);
+        rangeSumBSTRec(root.right,low,high,info);
     }
 }
 
