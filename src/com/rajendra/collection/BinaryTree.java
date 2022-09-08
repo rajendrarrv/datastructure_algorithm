@@ -8,8 +8,6 @@ import java.text.NumberFormat;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.Deque;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -223,14 +221,10 @@ public class BinaryTree {
 
     public static void main(String[] args) {
 //        [3,4,5,1,2]
-        int rootData[] = {10, 5, 3, -1, -1, 7, -1, -1, 15, 18, -1, -1};
-        BinaryTree rootRoot = new BinaryTree();
-        rootRoot.buildTree(rootData);
-        System.out.println();
-        rootRoot.levelOrderDisplay();
-        System.out.println("Range =" + rootRoot.rangeSumBST(7, 15));
+        BinaryTree binaryTree  = new BinaryTree();
+        System.out.println(  binaryTree.catalanNum(3));
 
-    }
+            }
 
     private int sumOfNodesAtLength(int k) {
         if (root == null) return 0;
@@ -765,6 +759,17 @@ public class BinaryTree {
 
         return (root.val == root.left.val +root.right.val);
 
+    }
+
+    public int catalanNum(int n) {
+        int[] dp = new int[n+1];
+        dp[0] =1;
+        dp[1]=1;
+        for(int i=2; i<= n; i++){
+            for(int j=1; j<=i;j++) // take j as root, j-1 nodes form left subtree, i-j nodes forms right subtree.
+                dp[i] = dp[i]+ dp[j-1] * dp[i-j];
+        }
+        return dp[n];
     }
 }
 
