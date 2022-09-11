@@ -148,8 +148,8 @@ public class ArraysImpl {
 
     public static void main(String[] args) {
         ArraysImpl arrays = new ArraysImpl(null);
-        System.out.println("My Love is " + arrays.findMaxAverage(new int[]{8860,-853,6534,4477,-4589,8646,-6155,-5577,-1656,-5779,-2619,-8604,-1358,-8009,4983,7063,3104,-1560,4080,2763,5616,-2375,2848,1394,-7173,-5225,-8244,-809,8025,-4072,-4391,-9579,1407,6700,2421,-6685,5481,-1732,-8892,-6645,3077,3287,-4149,8701,-4393,-9070,-1777,2237,-3253,-506,-4931,-7366,-8132,5406,-6300,-275,-1908,67,3569,1433,-7262,-437,8303,4498,-379,3054,-6285,4203,6908,4433,3077,2288,9733,-8067,3007,9725,9669,1362,-2561,-4225,5442,-9006,-429,160,-9234,-4444,3586,-5711,-9506,-79,-4418,-4348,-5891}
-        , 93));
+        System.out.println("My Love is " + Arrays.toString(arrays.findErrorNums(new int[]{3,2,2
+        })));
     }
 
 
@@ -392,29 +392,43 @@ public class ArraysImpl {
     }
 
     public double findMaxAverage(int[] nums, int k) {
-        int len = nums.length;
-        double max=Integer.MIN_VALUE;
-        if (nums.length == 0) {
-            return 0;
-        }
-        if (k==0)return 0;
-        if (len == 1 && k == 1)
-            return nums[0];
         double sum = 0;
-        boolean flag = false;
-        for (int i = 0; i < nums.length; i++) {
-            for (int j = i; j < k + i; j++) {
-                if (j >= len) {
-                    flag = true;
-                    break;
-                }
-                sum += nums[j];
-            }
-            if (flag) break;
-            max = Math.max(max, sum);
-            sum = 0;
+        for (int i = 0; i < k; ++i)
+            sum += nums[i];
+        double ans = sum;
+
+        for (int i = k; i < nums.length; ++i) {
+            sum += nums[i] - nums[i - k];
+            ans = Math.max(ans, sum);
         }
-        return (double) max / k;
+
+        return ans / k;
+    }
+
+
+    public int[] findErrorNums(int[] nums) {
+        Arrays.sort(nums);
+        int index = 0;
+
+        int arr[] = new int[nums.length];
+        for (int i = 0; i < nums.length; i++) {
+            index++;
+            arr[i] = index;
+        }
+
+        int[] result = new int[2];
+        System.out.println(Arrays.toString(arr));
+        System.out.println(Arrays.toString(nums));
+        for (int i = 0; i < nums.length; i++) {
+
+            if (arr[i] != nums[i]) {
+                result[1] = arr[i];
+                result[0] = nums[i];
+            }
+        }
+
+        return result;
+
     }
 }
 

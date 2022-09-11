@@ -237,13 +237,10 @@ public class BinarySearchTree extends BinaryTree {
 
     public static void main(String[] args) {
         BinarySearchTree bst = new BinarySearchTree();
-        int data[] = {4, 2, 1, 3, 7};
+        int data[] = {2,2,2};
         bst.buildTree(data);
-        System.out.println();
-        bst.levelOrderDisplay();
-        System.out.println("SBST");
-        bst.listOfLeadNode();
-//        bst.searchBST(2);
+        System.out.println( "Valid BST"+bst.isValidBST());
+
     }
 
     private TreeNode listCommonAnsisters(int p, int q) {
@@ -341,6 +338,31 @@ Algorithm
         }
         rangeSumBSTRec(root.left,low,high,info);
         rangeSumBSTRec(root.right,low,high,info);
+    }
+
+
+    public  boolean isValidBST(){
+        return isValidBST(this.root);
+    }
+    private boolean isValidBST(TreeNode root) {
+        if (root == null)
+            return true;
+
+        /* False if left is > than node */
+        if (root.left != null && root.left.val > root.val)
+            return false;
+
+        /* False if right is < than node */
+        if (root.right != null && root.right.val < root.val)
+            return false;
+
+        /* False if, recursively, the left or right is not a BST
+         */
+        if (!isValidBST(root.left) || !isValidBST(root.right))
+            return false;
+
+        /* Passing all that, it's a BST */
+        return true;
     }
 }
 
