@@ -10,6 +10,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.print.DocFlavor;
+
 /**
  * Created by Rajendra Verma on 05/09/22.
  */
@@ -144,12 +146,6 @@ public class ArraysImpl {
         }
         // required sum
         return sum;
-    }
-
-    public static void main(String[] args) {
-        ArraysImpl arrays = new ArraysImpl(null);
-        System.out.println("My Love is " + Arrays.toString(arrays.findErrorNums(new int[]{3,2,2
-        })));
     }
 
 
@@ -430,6 +426,219 @@ public class ArraysImpl {
         return result;
 
     }
+
+
+    public ArrayList<ArrayList<Integer>> generate(int numRows) {
+        ArrayList<ArrayList<Integer>> result = new ArrayList<ArrayList<Integer>>();
+        if (numRows <= 0)
+            return result;
+        ArrayList<Integer> pre = new ArrayList<Integer>();
+        pre.add(1);
+        result.add(pre);
+        for (int i = 2; i <= numRows; i++) {
+            ArrayList<Integer> cur = new ArrayList<Integer>();
+            cur.add(1); //first
+            for (int j = 0; j < pre.size() - 1; j++) {
+                cur.add(pre.get(j) + pre.get(j + 1)); //middle
+            }
+            cur.add(1);//last
+            result.add(cur);
+            pre = cur;
+        }
+        return result;
+    }
+
+    public List<List<Integer>> pascalTriangle(int num) {
+        List<List<Integer>> result = new ArrayList<List<Integer>>();
+        if (num <= 0)
+            return result;
+        ArrayList<Integer> pre = new ArrayList<Integer>();
+        pre.add(1);
+        result.add(pre);
+        for (int i = 2; i <= num; i++) {
+            ArrayList<Integer> cur = new ArrayList<Integer>();
+            cur.add(1); //first
+            for (int j = 0; j < pre.size() - 1; j++) {
+                cur.add(pre.get(j) + pre.get(j + 1)); //middle
+            }
+            cur.add(1);//last
+            result.add(cur);
+            pre = cur;
+        }
+        return result;
+    }
+
+    private int pivotIndex() {
+        return pivotIndex(this.root);
+    }
+
+    public int pivotIndex(int[] nums) {
+        int sum = 0, leftsum = 0;
+        for (int x : nums) sum += x;
+        for (int i = 0; i < nums.length; ++i) {
+            if (leftsum == sum - leftsum - nums[i]) return i;
+            leftsum += nums[i];
+        }
+        return -1;
+    }
+
+
+    public int dominantIndex(int[] nums) {
+        int max = Integer.MIN_VALUE;
+        int totalSum = 0;
+        int index = -1;
+        for (int i = 0; i < nums.length; i++) {
+            max = Math.max(nums[i], max);
+            totalSum += nums[i];
+        }
+        for (int i = 0; i < nums.length; i++) {
+            if (max != nums[i] && max < 2 * nums[i])
+                return -1;
+            if (totalSum - max == (totalSum - nums[i])) {
+                index = i;
+            }
+        }
+        return index;
+    }
+
+    public int[] plusOne(int[] digits) {
+        if (digits == null || digits.length == 0)
+            return new int[0];
+
+        int carry = 1;
+        for (int i = digits.length - 1; i >= 0; i--) {
+            int sum = digits[i] + carry;
+            if (sum >= 10) {
+                carry = 1;
+            } else {
+                carry = 0;
+            }
+            digits[i] = sum % 10;
+        }
+
+        if (carry == 1) {
+            int[] result = new int[digits.length + 1];
+            System.arraycopy(digits, 0, result, 1, digits.length);
+            result[0] = 1;
+            return result;
+        } else {
+            //int[] result = new int[digits.length];
+            return digits;
+        }
+    }
+
+    public void reverse() {
+        reverse(root);
+        System.out.println(Arrays.toString(root));
+    }
+
+    public void reverse(int[] array) {
+        int initial = 0;
+        int finall = array.length - 1;
+        while (initial < array.length && finall > 0) {
+            swap(array, initial, finall);
+            initial++;
+            finall--;
+        }
+
+
+    }
+
+    private void swap(int[] array, int initial, int finall) {
+        int temp = array[initial];
+        array[initial] = array[finall];
+        array[finall] = temp;
+
+    }
+
+
+    public int arrayPairSum(int[] nums) {
+        Arrays.sort(nums);
+        int sum = 0;
+        for (int i = 1; i < nums.length; i = i + 2) {
+            sum += Math.min(nums[i - 1], nums[i]);
+        }
+
+
+        return sum;
+    }
+
+    public int[] twoSum(int[] numbers, int target) {
+        int slow = 0, fast = numbers.length - 1;
+        while (slow < fast) {
+            int sum = numbers[slow] + numbers[fast];
+            if (sum == target) return new int[]{slow + 1, fast + 1};
+            else if (sum < target) slow++;
+            else fast--;
+        }
+        return new int[]{-1, -1};
+    }
+
+
+    public int updateElement(int[] nums, int val) {
+        int k = 0;
+        for (int i = 0; i < nums.length; ++i) {
+            if (nums[i] != val) {
+                nums[k] = nums[i];
+                k++;
+            }
+        }
+        return k;
+    }
+
+    public int removeElement(int[] nums, int val) {
+
+        int k = 0;
+        for (int i = 0; i < nums.length; i++) {
+
+            if (nums[i] != val) {
+                nums[k] = nums[i];
+                k++;
+            }
+
+        }
+        return k;
+    }
+
+    public static void main(String[] args) {
+        ArraysImpl arrays = new ArraysImpl(null);
+        arrays.rotate(new int[]{1, 2, 3, 4, 5, 6, 7}, 3);
+
+    }
+
+    public int minSubArrayLen(int target, int[] nums) {
+        if (nums == null || nums.length == 0) return 0;
+
+        int i = 0, j = 0, sum = 0, min = Integer.MAX_VALUE;
+        while (j < nums.length) {
+            sum += nums[j++];
+            while (sum >= target) {
+                min = Math.min(min, j - i); //(old j) - i + 1 = j - i
+                sum -= nums[i++];
+            }
+        }
+        return min == Integer.MAX_VALUE ? 0 : min;
+    }
+
+
+    public void rotate(int[] arr, int d) {
+        int p = 1;
+        int n  = arr.length;
+        while (p <= d) {
+            int last = arr[0];
+            for (int i = 0; i < n - 1; i++) {
+                arr[i] = arr[i + 1];
+            }
+            arr[n - 1] = last;
+            p++;
+        }
+
+        for (int i = 0; i < n; i++) {
+            System.out.print(arr[i] + " ");
+        }
+
+    }
+
 }
 
 
