@@ -600,11 +600,7 @@ public class ArraysImpl {
         return k;
     }
 
-    public static void main(String[] args) {
-        ArraysImpl arrays = new ArraysImpl(null);
-        arrays.rotate(new int[]{1, 2, 3, 4, 5, 6, 7}, 3);
 
-    }
 
     public int minSubArrayLen(int target, int[] nums) {
         if (nums == null || nums.length == 0) return 0;
@@ -623,7 +619,7 @@ public class ArraysImpl {
 
     public void rotate(int[] arr, int d) {
         int p = 1;
-        int n  = arr.length;
+        int n = arr.length;
         while (p <= d) {
             int last = arr[0];
             for (int i = 0; i < n - 1; i++) {
@@ -639,6 +635,26 @@ public class ArraysImpl {
 
     }
 
+    public static void main(String[] args) {
+        ArraysImpl arrays  = new ArraysImpl(null);
+       List<Integer> re= arrays.pascalTriangleII(3);
+        System.out.println(re);
+    }
+
+    public List<Integer> pascalTriangleII(int n) {
+        List<Integer> result = new ArrayList<Integer>();
+        for (int i = 0;i < n + 1; i ++) {
+            result.add(1);
+            for (int j = i; j >=0; j --) {
+                if (j != 0 && j != i) {
+                    result.set(j, result.get(j) + result.get(j-1));
+                }
+            }
+        }
+        return result;
+    }
+
+    
 }
 
 
