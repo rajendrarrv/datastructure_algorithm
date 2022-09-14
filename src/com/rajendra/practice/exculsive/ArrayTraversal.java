@@ -30,33 +30,34 @@ public class ArrayTraversal {
     }
 
     private List<Integer> spiralOrder(int[][] matrix) {
+
         List<Integer> result = new ArrayList<>();
-        int i, startRow = 0, startCol = 0;
+        int i, row = 0, col = 0;
         int rowlen = matrix.length;
         int colLen = matrix[0].length;
 
-        while (startRow < rowlen && startCol < colLen) {
+        while (row < rowlen && col < colLen) {
             // Print the first row from the remaining rows
 //            left
-            for (i = startCol; i < colLen; ++i) {
-                result.add(matrix[startRow][i]);
-                System.out.print(matrix[startRow][i] + " ");
+            for (i = col; i < colLen; ++i) {
+                result.add(matrix[row][i]);
+                System.out.print(matrix[row][i] + " ");
             }
-            startRow++;
+            row++;
 
             // Print the last column from the remaining
             // columns
 //            down
-            for (i = startRow; i < rowlen; ++i) {
+            for (i = row; i < rowlen; ++i) {
                 result.add(matrix[i][colLen - 1]);
                 System.out.print(matrix[i][colLen - 1] + " ");
             }
-            colLen--;
+            colLen--; //
 
             // Print the last row from the remaining rows */
 //            Moving right
-            if (startRow < rowlen) {
-                for (i = colLen - 1; i >= startCol; --i) {
+            if (row < rowlen) {
+                for (i = colLen - 1; i >= col; --i) {
                     result.add(matrix[rowlen - 1][i]);
                     System.out.print(matrix[rowlen - 1][i] + " ");
                 }
@@ -66,17 +67,18 @@ public class ArrayTraversal {
             // Print the first column from the remaining
             // columns */
 //            Moving up
-            if (startCol < colLen) {
-                for (i = rowlen - 1; i >= startRow; --i) {
-                    result.add(matrix[i][startCol]);
+            if (col < colLen) {
+                for (i = rowlen - 1; i >= row; --i) {
+                    result.add(matrix[i][col]);
 
-                    System.out.print(matrix[i][startCol] + " ");
+                    System.out.print(matrix[i][col] + " ");
                 }
-                startCol++;
+                col++;
             }
 
         }
         return result;
+
     }
 
 
@@ -133,7 +135,7 @@ public class ArrayTraversal {
 
 
 //        [[1,2,3],[4,5,6],[7,8,9]]
-        ArrayTraversal a = new ArrayTraversal(new int[][]{{1, 2, 3, 4}, {5, 6, 7, 8}, {9, 10, 11, 12}, {13, 14, 15, 16}});
+        ArrayTraversal a = new ArrayTraversal(new int[][]{{1, 2, 3}, {4, 5, 6}, {7, 8, 9}});
         a.sprial();
     }
 
