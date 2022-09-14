@@ -7,13 +7,10 @@ import java.util.List;
 /**
  * Created by Rajendra Verma on 13/09/22.
  */
-public class MatrixUtils {
-
-    int matrix[][];
+public class Practice1 {
 
 
-    public MatrixUtils(int[][] matrix) {
-        this.matrix = matrix;
+    public Practice1() {
     }
 
 
@@ -51,9 +48,9 @@ public class MatrixUtils {
                     row++;
                 }
                 result.add(ints[row][col]);
-                if (row == m-1){
+                if (row == m - 1) {
                     col++;
-                }else {
+                } else {
                     row++;
                 }
 
@@ -68,12 +65,57 @@ public class MatrixUtils {
         return result;
     }
 
+    public List<Integer> sprial(int[][] input) {
+        List<Integer> result = new ArrayList<>();
+        int row = 0;
+        int col = 0;
+        int i = 0;
+        int rowLen = input.length;
+        int colLen = input[0].length;
 
-    public static void main(String[] args) {
-        MatrixUtils d = new MatrixUtils(null);
-       List<Integer> result =   d.diagonal(new int[][]{{1, 2, 3}, {4, 5, 6}, {7, 8, 9}});
-        System.out.println(result);
+        while (row < rowLen && col < colLen) {
+
+//            moving left
+            for (i = col; i < colLen; i++) {
+                result.add(input[row][i]);
+            }
+            row++;
+
+//            moving down
+            for (i = row; i < rowLen; i++) {
+                result.add(input[i][colLen - 1]);
+
+            }
+
+            colLen--;
+
+            if (row < rowLen) {
+
+                for (i = colLen - 1; i >= col; --i) {
+                    result.add(input[rowLen - 1][i]);
+                }
+
+//     move right
+
+                rowLen--;
+            }
+
+            if (col < colLen) {
+                for (i = rowLen - 1; i >= row; --i) {
+                    result.add(input[i][col]);
+
+                }
+                col++;
+
+
+            }
+
+
+        }
+
+        return result;
     }
+
 
     void reverse(int[] arr, int s, int e) {
         while (s < e) {
@@ -92,4 +134,46 @@ public class MatrixUtils {
         System.out.println(Arrays.toString(nums));
 
     }
+
+    public List<List<Integer>> pascalTriangle(int n) {
+        List<List<Integer>> rowArray = new ArrayList<List<Integer>>();
+        for (int i = 0; i < n; i++) {
+            List<Integer> colArray = new ArrayList<>();
+            for (int j = 0; j <= i; j++) {
+                if (j == 0 || j == i) {
+                    colArray.add(1);
+                } else {
+                    colArray.add(j, rowArray.get(i - 1).get(j - 1) + rowArray.get(i - 1).get(j));
+                }
+            }
+            rowArray.add(colArray);
+        }
+
+
+        return rowArray;
+
+    }
+
+    public String addBinary(String s1, String s2) {
+        StringBuilder sb = new StringBuilder();
+        int i = s1.length() - 1, j = s2.length() -1, carry = 0;
+        while (i >= 0 || j >= 0) {
+            int sum = carry;
+            if (j >= 0)
+                sum += s2.charAt(j--) - '0';
+            if (i >= 0)
+                sum += s1.charAt(i--) - '0';
+            sb.append(sum % 2);
+            carry = sum / 2;
+        }
+        if (carry != 0) sb.append(carry);
+        return sb.reverse().toString();
+    }
+
+    public static void main(String[] args) {
+        Practice1 d = new Practice1();
+d.addBinary("11","10");
+    }
+
+
 }
