@@ -6,12 +6,10 @@ package com.rajendra.collection.utils;
 public class SearchInRotatedArray {
 
 
-
     public int pivotedBinarySearch(int arr[], int n,
-                                   int key)
-    {
+                                   int key) {
         int pivot = findPivot(arr, 0, n - 1);
-     if (pivot == -1)
+        if (pivot == -1)
             return binarySearch(arr, 0, n - 1, key);
         if (arr[pivot] == key)
             return pivot;
@@ -20,9 +18,8 @@ public class SearchInRotatedArray {
         return binarySearch(arr, pivot + 1, n - 1, key);
     }
 
-//    pivot element is the element whose next element is smaller than the current element
-    private int findPivot(int arr[], int low, int high)
-    {
+    //    pivot element is the element whose next element is smaller than the current element
+    private int findPivot(int arr[], int low, int high) {
         if (high < low)
             return -1;
         if (high == low)
@@ -40,8 +37,7 @@ public class SearchInRotatedArray {
 
     /* Standard Binary Search function */
     private int binarySearch(int arr[], int low, int high,
-                            int key)
-    {
+                             int key) {
         if (high < low)
             return -1;
 
@@ -52,5 +48,25 @@ public class SearchInRotatedArray {
         if (key > arr[mid])
             return binarySearch(arr, (mid + 1), high, key);
         return binarySearch(arr, low, (mid - 1), key);
+    }
+
+    public int findMin(int[] nums) {
+
+        if (nums.length < 0)
+            return 0;
+        if (nums.length <= 1)
+            return nums[0];
+        int p = findPivot(nums, 0, nums.length - 1);
+
+        if (p >= 0 && p < nums.length-1) {
+            return nums[p + 1];
+        }
+        return nums[0];
+
+    }
+
+    public static void main(String[] args) {
+        SearchInRotatedArray a = new SearchInRotatedArray();
+        a.findMin(new int[]{1,2,3});
     }
 }

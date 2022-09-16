@@ -46,7 +46,7 @@ public class SearchingAlgorithm {
 
     public static void main(String[] args) {
         SearchingAlgorithm searchingAlgorithm = new SearchingAlgorithm();
-        System.out.println( searchingAlgorithm.sqrt(2147483647));
+        System.out.println(Arrays.toString(searchingAlgorithm.searchRange(new int[]{2, 2}, 2)));
     }
 
     private int sqrt(int x) {
@@ -55,25 +55,23 @@ public class SearchingAlgorithm {
 
 
     private int sqrtRec(int left, int right, int x) {
-        if(x==0) return 0;
+        if (x == 0) return 0;
         if (left <= right) {
 
 
             double mid = (left + right) / 2;
-            double square =mid * mid;
-            if (( square<= x)
+            double square = mid * mid;
+            if ((square <= x)
                     && ((mid + 1) * (mid + 1) > x)) {
-                return(int) mid;
-            }
-
-            else if (square < x) {
+                return (int) mid;
+            } else if (square < x) {
                 return sqrtRec((int) mid + 1, right, x);
-            }
-            else {
-                return sqrtRec(left, (int)mid - 1, x);
+            } else {
+                return sqrtRec(left, (int) mid - 1, x);
             }
         }
-        return left;     }
+        return left;
+    }
 
     public int firstBadVersion(int n) {
 
@@ -84,8 +82,7 @@ public class SearchingAlgorithm {
             int mid = left + (right - left) / 2;
             if (isBadVersion(mid)) {
                 right = mid - 1;
-            }
-            else {
+            } else {
                 left = mid + 1;
             }
         }
@@ -93,13 +90,54 @@ public class SearchingAlgorithm {
         return left;
 
     }
+
     private boolean isBadVersion(int mid) {
         if (mid == 2 || mid == 5) return true;
 
         return false;
     }
 
+    public int findPeakElement(int[] nums) {
+        int left = 0;
+        int right = nums.length - 1;
+        while (left < right) {
+            int mid = (left + right) / 2;
+            if (nums[mid] < nums[mid + 1])
+                left = mid + 1;
+            else right = mid;
 
+        }
+        return left;
+    }
 
+    public int[] searchRange(int[] nums, int target) {
+        int[] ans = new int[2];
+        ans[0] = searchRange(nums, target, true);
+        ans[1] = searchRange(nums, target, false);
+        return ans;
+    }
 
+    private int searchRange(int[] nums, int target, boolean findStartIndex) {
+        int ans = -1;
+        int start = 0;
+        int end = nums.length - 1;
+        while (start <= end) {
+            int mid = start + (end - start) / 2;
+            if (nums[mid] > target)
+                end = mid - 1;
+            else if (nums[mid] < target)
+                start = mid + 1;
+            else {
+                ans = mid;
+                if (findStartIndex)
+                    end = mid - 1;
+                else
+                    start = mid + 1;
+            }
+
+        }
+        return ans;
+    }
 }
+
+
