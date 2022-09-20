@@ -601,7 +601,6 @@ public class ArraysImpl {
     }
 
 
-
     public int minSubArrayLen(int target, int[] nums) {
         if (nums == null || nums.length == 0) return 0;
 
@@ -635,26 +634,39 @@ public class ArraysImpl {
 
     }
 
-    public static void main(String[] args) {
-        ArraysImpl arrays  = new ArraysImpl(null);
-       List<Integer> re= arrays.pascalTriangleII(3);
-        System.out.println(re);
-    }
 
     public List<Integer> pascalTriangleII(int n) {
         List<Integer> result = new ArrayList<Integer>();
-        for (int i = 0;i < n + 1; i ++) {
+        for (int i = 0; i < n + 1; i++) {
             result.add(1);
-            for (int j = i; j >=0; j --) {
+            for (int j = i; j >= 0; j--) {
                 if (j != 0 && j != i) {
-                    result.set(j, result.get(j) + result.get(j-1));
+                    result.set(j, result.get(j) + result.get(j - 1));
                 }
             }
         }
         return result;
     }
 
-    
+    public static void main(String[] args) {
+        ArraysImpl arrays  = new ArraysImpl(null);
+        System.out.println( arrays.validMountainArray(new int[]{0,3,2,1}));
+    }
+
+    public boolean validMountainArray(int[] arr) {
+        boolean result = false;
+        for (int i = 0; i < arr.length - 1; i++) {
+            if (arr[i] < arr[i + 1]) {
+                result = true;
+            } else {
+                if (i>=3)
+                result = false;
+                break;
+            }
+        }
+        return result;
+    }
+
 }
 
 

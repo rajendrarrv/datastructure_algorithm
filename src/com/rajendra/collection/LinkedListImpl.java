@@ -143,7 +143,7 @@ public class LinkedListImpl {
         System.out.println("END");
     }
 
-    public void display(ListNode d ) {
+    public void display(ListNode d) {
         ListNode temp = d;
         while (temp != null) {
             System.out.print(temp.value + " -> ");
@@ -296,12 +296,12 @@ public class LinkedListImpl {
 //    middleOf linkedlist
 
     public ListNode middleNode(ListNode head) {
-        ListNode mid  = head;
-        while (head!=null && head.next !=null){
+        ListNode mid = head;
+        while (head != null && head.next != null) {
 
-            mid  = mid.next;
+            mid = mid.next;
 
-            head  = head.next.next;
+            head = head.next.next;
 
         }
 
@@ -312,9 +312,355 @@ public class LinkedListImpl {
 
     public ListNode reverseBetween(ListNode head, int left, int right) {
 
+
+//         operation is already done
+        if (left == right) {
+            return head;
+        }
+
+        // skip the first left-1 nodes
+        ListNode current = head;
+        ListNode prev = null;
+        for (int i = 0; current != null && i < left - 1; i++) {
+            prev = current;
+            current = current.next;
+        }
+
+        ListNode last = prev;
+        ListNode newEnd = current;
+
+        // reverse between left and right
+        ListNode next = current.next;
+        for (int i = 0; current != null && i < right - left + 1; i++) {
+            current.next = prev;
+            prev = current;
+            current = next;
+            if (next != null) {
+                next = next.next;
+            }
+        }
+
+        if (last != null) {
+            last.next = prev;
+        } else {
+            head = prev;
+        }
+
+        newEnd.next = current;
+        return head;
+
+
+    }
+
+    public void swapPairs() {
+
+
+        swapPairsRec(this.head);
+    }
+
+    public ListNode swapPairsItr(ListNode head) {
+        if (head == null) {
+            return head;
+        }
+        ListNode temp = head;
+
+        while (temp != null && temp.next != null) {
+
+            int k = temp.value;
+            temp.value = temp.next.value;
+            temp.next.value = k;
+            temp = temp.next.next;
+        }
+        return head;
+    }
+
+    public void swapPairsRec(ListNode node) {
+        if (node == null || node.next == null)
+            return;
+        int k = node.value;
+        node.value = node.next.value;
+        node.next.value = k;
+        swapPairsRec(node.next.next);
+    }
+
+    public void reverseList() {
+
+        ListNode newHead = reverseListRec(head);
+        head = newHead;
+    }
+
+    public ListNode reverseListRec(ListNode head) {
+        if (head.next == null)
+            return head;
+
+        ListNode newHead = reverseListRec(head.next);
+        head.next.next = head;
+        head.next = null;
+        return newHead;
+    }
+
+
+    public void mergeTwoListsRec(ListNode list1, ListNode list2, ListNode result) {
+        if (list1 == null && list2 == null) {
+            return;
+        }
+        if (list1 == null && list2 != null) {
+            result.next = list2;
+            return;
+        }
+        if (list2 == null && list1 != null) {
+            result.next = list1;
+            return;
+        }
+        if (list1.value < list2.value) {
+            result.next = new ListNode(list1.value);
+            mergeTwoListsRec(list1.next, list2, result.next);
+        } else {
+            result.next = new ListNode(list2.value);
+            mergeTwoListsRec(list1, list2.next, result.next);
+        }
+    }
+
+    private void append(ListNode result, int value) {
+        while (result.next != null) {
+            result = result.next;
+        }
+        result.next = new ListNode(value);
+    }
+
+    public boolean isPerfectSquare(int num) {
+        if (num == 0) {
+            return true;
+        }
+        if (num == 1) {
+            return true;
+        }
+
+        int left = 1;
+        int right = num;
+        int mid = (left + right) / 2;
+
+        int s = mid * mid;
+
+        if (s == num)
+            return true;
+        else if (s > num) {
+
+        } else {
+
+        }
+
+        return false;
+    }
+
+    public ListNode getIntersectionNode(ListNode headA, ListNode headB) {
+        while (headB != null) {
+            ListNode temp = headA;
+            while (temp != null) {
+                // if both Nodes are same
+                if (temp == headB) {
+                    return headB;
+                }
+                temp = temp.next;
+            }
+            headB = headB.next;
+        }
+        // If intersection is not present between the lists,
+        // return NULL.
         return null;
     }
 
 
+    int getSize(ListNode head) {
+
+        int count = 0;
+        while (head != null) {
+
+            head = head.next;
+            count++;
+        }
+        return count;
+    }
+
+    public ListNode rotateRight(int k) {
+
+        int size = getSize(head);
+        int n = size - k;
+        ListNode pre = head;
+        ListNode current = head;
+        ListNode next = current.next;
+        for (int i = 0; i < n; i++) {
+            pre = current;
+            current = current.next;
+            next = current.next;
+        }
+
+        pre.next = head;
+
+        return null;
+    }
+
+    public boolean isHappy(int n) {
+        int fast = sq(sq(n));
+        int slow = sq(n);
+
+        if (fast == slow)
+            return true;
+
+        while (fast != slow) {
+            fast = sq(sq(fast));
+            slow = sq(slow);
+
+            if (fast == 1 || slow == 1)
+                return true;
+            System.out.printf("Fast %d and Slow %d", fast, slow);
+            System.out.println();
+        }
+        return false;
+    }
+
+    private int sq(int n) {
+        int num = n;
+        int k = 0;
+        while (num > 0) {
+            int rem = num % 10;
+            num = num / 10;
+            k += rem * rem;
+        }
+        return k;
+    }
+
+    public void reverseKGroup(int k) {
+        this.head = reverseKGroup(this.head, k);
+
+    }
+
+    public ListNode reverseKGroup(ListNode head, int k) {
+
+        ListNode prev = null;
+        ListNode current = head;
+        ListNode next = current.next;
+        for (int i = 0; i < k; i++) {
+            current.next = prev;
+            prev = current;
+            current = next;
+            if (next != null)
+                next = next.next;
+
+        }
+        return prev;
+    }
+
+    public void removeNthFromEnd(int n) {
+        this.head = removeNthFromEnd(this.head, n);
+    }
+
+    public ListNode removeNthFromEnd(ListNode head, int n) {
+        if (head == null || n == 0)
+            return null;
+        int sizeOfList = getSize(head);
+
+        int reverseIndex = sizeOfList - n;
+
+//         remove at index
+
+        if (reverseIndex == 0) {
+            if (head.next == null) {
+                head = null;
+                return head;
+            } else {
+                head = head.next;
+                return head;
+            }
+        }
+        ListNode temp = head;
+        for (int i = 0; i < reverseIndex - 1; i++) {
+            temp = temp.next;
+            System.out.println("Value " + temp.value);
+
+        }
+        temp.next = temp.next.next;
+
+        return head;
+    }
+
+    public void removeFirstOccElements(int val) {
+        this.head = removeFirstOccElements(this.head, val);
+    }
+
+    public void removeElements(int val) {
+
+        this.head = removeElements(this.head, val);
+    }
+
+    private ListNode removeElements(ListNode head, int val) {
+        ListNode temp = head, prev = null;
+//         change the  head and temp to the target elelment
+        while (temp != null && temp.value == val) {
+            prev = temp;
+            head = temp.next; // Changed head
+            temp = head; // Change Temp
+        }
+        while (temp != null) {
+            while (temp != null && temp.value == val) {
+                prev.next = temp.next;
+                temp = temp.next;
+            }
+            if (temp == null)
+                return head;
+            prev = temp;
+            temp = temp.next;
+        }
+        return head;
+    }
+
+
+    public ListNode removeFirstOccElements(ListNode head, int val) {
+//         delete from the begining
+        ListNode temp = head;
+        ListNode prev = null;
+        int index = 0;
+        while (temp != null) {
+
+//            delete at the first
+            if (index == 0 && val == temp.value) {
+                temp = temp.next;
+                return temp;
+//                delte at last
+            } else if (index >= size - 1 && val == temp.value) {
+                prev.next = temp.next;
+                return head;
+            } else { // delete at middle
+
+                if (temp.value == val) {
+                    prev.next = temp.next;
+                }
+
+            }
+            prev = temp;
+            temp = temp.next;
+            index++;
+        }
+
+        return head;
+    }
+
+
+    public static void main(String[] args) {
+        LinkedListImpl linkedList = new LinkedListImpl();
+//        1,2,6,3,4,5,6
+        linkedList.insertLast(1);
+        linkedList.insertLast(1);
+        linkedList.insertLast(2);
+        linkedList.insertLast(1);
+        linkedList.insertLast(1);
+        linkedList.insertLast(1);
+        linkedList.insertLast(1);
+        linkedList.display();
+        linkedList.removeElements(1);
+        linkedList.display();
+
+
+    }
 
 }
