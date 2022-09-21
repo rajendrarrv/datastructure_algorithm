@@ -3,7 +3,6 @@ package com.rajendra.practice.exculsive;
 import com.rajendra.model.ListNode;
 import com.rajendra.model.TreeNode;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -51,9 +50,9 @@ public class Recursion {
 
         while (temp != null && temp.next != null) {
 
-            int k = temp.value;
-            temp.value = temp.next.value;
-            temp.next.value = k;
+            int k = temp.val;
+            temp.val = temp.next.val;
+            temp.next.val = k;
             temp = temp.next.next;
         }
         return head;
@@ -62,9 +61,9 @@ public class Recursion {
     public void swapPairsRec(ListNode node) {
         if (node == null || node.next == null)
             return;
-        int k = node.value;
-        node.value = node.next.value;
-        node.next.value = k;
+        int k = node.val;
+        node.val = node.next.val;
+        node.next.val = k;
         swapPairsRec(node.next.next);
     }
 

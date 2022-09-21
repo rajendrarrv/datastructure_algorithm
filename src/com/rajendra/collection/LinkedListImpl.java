@@ -82,7 +82,7 @@ public class LinkedListImpl {
         }
 
         ListNode secondLast = get(size - 2);
-        int val = tail.value;
+        int val = tail.val;
         tail = secondLast;
         tail.next = null;
         size--;
@@ -98,7 +98,7 @@ public class LinkedListImpl {
         }
 
         ListNode prev = get(index - 1);
-        int val = prev.next.value;
+        int val = prev.next.val;
 
         prev.next = prev.next.next;
         size--;
@@ -108,7 +108,7 @@ public class LinkedListImpl {
     public ListNode find(int value) {
         ListNode node = head;
         while (node != null) {
-            if (node.value == value) {
+            if (node.val == value) {
                 return node;
             }
             node = node.next;
@@ -125,7 +125,7 @@ public class LinkedListImpl {
     }
 
     public int deleteFirst() {
-        int val = head.value;
+        int val = head.val;
         head = head.next;
         if (head == null) {
             tail = null;
@@ -137,7 +137,7 @@ public class LinkedListImpl {
     public void display() {
         ListNode temp = head;
         while (temp != null) {
-            System.out.print(temp.value + " -> ");
+            System.out.print(temp.val + " -> ");
             temp = temp.next;
         }
         System.out.println("END");
@@ -146,7 +146,7 @@ public class LinkedListImpl {
     public void display(ListNode d) {
         ListNode temp = d;
         while (temp != null) {
-            System.out.print(temp.value + " -> ");
+            System.out.print(temp.val + " -> ");
             temp = temp.next;
         }
         System.out.println("END");
@@ -157,7 +157,7 @@ public class LinkedListImpl {
         ListNode node = head;
 
         while (node.next != null) {
-            if (node.value == node.next.value) {
+            if (node.val == node.next.val) {
                 node.next = node.next.next;
                 size--;
             } else {
@@ -176,22 +176,22 @@ public class LinkedListImpl {
         LinkedListImpl ans = new LinkedListImpl();
 
         while (f != null && s != null) {
-            if (f.value < s.value) {
-                ans.insertLast(f.value);
+            if (f.val < s.val) {
+                ans.insertLast(f.val);
                 f = f.next;
             } else {
-                ans.insertLast(s.value);
+                ans.insertLast(s.val);
                 s = s.next;
             }
         }
 
         while (f != null) {
-            ans.insertLast(f.value);
+            ans.insertLast(f.val);
             f = f.next;
         }
 
         while (s != null) {
-            ans.insertLast(s.value);
+            ans.insertLast(s.val);
             s = s.next;
         }
 
@@ -211,7 +211,7 @@ public class LinkedListImpl {
             ListNode first = get(col);
             ListNode second = get(col + 1);
 
-            if (first.value > second.value) {
+            if (first.val > second.val) {
                 // swap
                 if (first == head) {
                     head = second;
@@ -366,9 +366,9 @@ public class LinkedListImpl {
 
         while (temp != null && temp.next != null) {
 
-            int k = temp.value;
-            temp.value = temp.next.value;
-            temp.next.value = k;
+            int k = temp.val;
+            temp.val = temp.next.val;
+            temp.next.val = k;
             temp = temp.next.next;
         }
         return head;
@@ -377,9 +377,9 @@ public class LinkedListImpl {
     public void swapPairsRec(ListNode node) {
         if (node == null || node.next == null)
             return;
-        int k = node.value;
-        node.value = node.next.value;
-        node.next.value = k;
+        int k = node.val;
+        node.val = node.next.val;
+        node.next.val = k;
         swapPairsRec(node.next.next);
     }
 
@@ -412,11 +412,11 @@ public class LinkedListImpl {
             result.next = list1;
             return;
         }
-        if (list1.value < list2.value) {
-            result.next = new ListNode(list1.value);
+        if (list1.val < list2.val) {
+            result.next = new ListNode(list1.val);
             mergeTwoListsRec(list1.next, list2, result.next);
         } else {
-            result.next = new ListNode(list2.value);
+            result.next = new ListNode(list2.val);
             mergeTwoListsRec(list1, list2.next, result.next);
         }
     }
@@ -483,21 +483,28 @@ public class LinkedListImpl {
     }
 
     public ListNode rotateRight(int k) {
-
-        int size = getSize(head);
-        int n = size - k;
-        ListNode pre = head;
-        ListNode current = head;
-        ListNode next = current.next;
-        for (int i = 0; i < n; i++) {
-            pre = current;
-            current = current.next;
-            next = current.next;
+        if (k <= 0 || head == null || head.next == null) {
+            return head;
         }
 
-        pre.next = head;
+        ListNode last = head;
+        int length = 1;
+        while (last.next != null) {
+            last = last.next;
+            length++;
+        }
 
-        return null;
+        last.next = head;
+        int rotations = k % length;
+        int skip = length - rotations;
+        ListNode newLast = head;
+        for (int i = 0; i < skip - 1; i++) {
+            newLast = newLast.next;
+        }
+        head = newLast.next;
+        newLast.next = null;
+
+        return head;
     }
 
     public boolean isHappy(int n) {
@@ -576,7 +583,7 @@ public class LinkedListImpl {
         ListNode temp = head;
         for (int i = 0; i < reverseIndex - 1; i++) {
             temp = temp.next;
-            System.out.println("Value " + temp.value);
+            System.out.println("Value " + temp.val);
 
         }
         temp.next = temp.next.next;
@@ -596,13 +603,13 @@ public class LinkedListImpl {
     private ListNode removeElements(ListNode head, int val) {
         ListNode temp = head, prev = null;
 //         change the  head and temp to the target elelment
-        while (temp != null && temp.value == val) {
+        while (temp != null && temp.val == val) {
             prev = temp;
             head = temp.next; // Changed head
             temp = head; // Change Temp
         }
         while (temp != null) {
-            while (temp != null && temp.value == val) {
+            while (temp != null && temp.val == val) {
                 prev.next = temp.next;
                 temp = temp.next;
             }
@@ -623,16 +630,16 @@ public class LinkedListImpl {
         while (temp != null) {
 
 //            delete at the first
-            if (index == 0 && val == temp.value) {
+            if (index == 0 && val == temp.val) {
                 temp = temp.next;
                 return temp;
 //                delte at last
-            } else if (index >= size - 1 && val == temp.value) {
+            } else if (index >= size - 1 && val == temp.val) {
                 prev.next = temp.next;
                 return head;
             } else { // delete at middle
 
-                if (temp.value == val) {
+                if (temp.val == val) {
                     prev.next = temp.next;
                 }
 
@@ -645,21 +652,53 @@ public class LinkedListImpl {
         return head;
     }
 
+    public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
+        ListNode head = null;
+        ListNode temp = null;
+        int carry = 0;
+        while (l1 != null || l2 != null) {
+            int sum = carry;
+            if (l1 != null) {
+                sum += l1.val;
+                l1 = l1.next;
+            }
+            if (l2 != null) {
+                sum += l2.val;
+                l2 = l2.next;
+            }
+            ListNode node = new ListNode(sum % 10);
+            carry = sum / 10;
+            if (temp == null) {
+                temp = head = node;
+            }
+            else {
+                temp.next = node;
+                temp = temp.next;
+            }
+        }
+        if (carry > 0) {
+            temp.next = new ListNode(carry);
+        }
+        this.head =head;
+        return head;
+    }
+
 
     public static void main(String[] args) {
         LinkedListImpl linkedList = new LinkedListImpl();
-//        1,2,6,3,4,5,6
-        linkedList.insertLast(1);
-        linkedList.insertLast(1);
-        linkedList.insertLast(2);
-        linkedList.insertLast(1);
-        linkedList.insertLast(1);
-        linkedList.insertLast(1);
-        linkedList.insertLast(1);
-        linkedList.display();
-        linkedList.removeElements(1);
-        linkedList.display();
+//        1,2,3,4,5
+        linkedList.insertLast(5);
+        linkedList.insertLast(6);
+        linkedList.insertLast(4);
 
+        LinkedListImpl linkedList1 = new LinkedListImpl();
+//        1,2,3,4,5
+        linkedList1.insertLast(7);
+        linkedList1.insertLast(0);
+        linkedList1.insertLast(8);
+
+      linkedList.addTwoNumbers(linkedList.head, linkedList1.head);
+       linkedList.display();
 
     }
 
