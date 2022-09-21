@@ -2,12 +2,16 @@ package com.rajendra.collection;
 
 import com.rajendra.model.ListNode;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * kunal class
  * Created by Rajendra Verma on 27/08/22.
  */
 public class LinkedListImpl {
-
+    //head - 1-2-3-4-trail
     public ListNode head;
     public ListNode tail;
     public int size;
@@ -670,8 +674,7 @@ public class LinkedListImpl {
             carry = sum / 10;
             if (temp == null) {
                 temp = head = node;
-            }
-            else {
+            } else {
                 temp.next = node;
                 temp = temp.next;
             }
@@ -679,27 +682,91 @@ public class LinkedListImpl {
         if (carry > 0) {
             temp.next = new ListNode(carry);
         }
-        this.head =head;
+        this.head = head;
         return head;
     }
 
 
     public static void main(String[] args) {
         LinkedListImpl linkedList = new LinkedListImpl();
-//        1,2,3,4,5
-        linkedList.insertLast(5);
+//        3,0,2,6,8,1,7,9,4,2,5,5,0
+        linkedList.insertLast(3);
+        linkedList.insertLast(0);
+        linkedList.insertLast(2);
         linkedList.insertLast(6);
+        linkedList.insertLast(8);
+        linkedList.insertLast(1);
+        linkedList.insertLast(7);
+        linkedList.insertLast(9);
         linkedList.insertLast(4);
-
-        LinkedListImpl linkedList1 = new LinkedListImpl();
-//        1,2,3,4,5
-        linkedList1.insertLast(7);
-        linkedList1.insertLast(0);
-        linkedList1.insertLast(8);
-
-      linkedList.addTwoNumbers(linkedList.head, linkedList1.head);
-       linkedList.display();
+        linkedList.insertLast(2);
+        linkedList.insertLast(5);
+        linkedList.insertLast(5);
+        linkedList.insertLast(0);
+        System.out.println(Arrays.toString(linkedList.spiralMatrix(3, 5)));
+        linkedList.display();
 
     }
+
+    public int[][] spiralMatrix(int m, int n) {
+        int[][] matrix = new int[m][n];
+
+
+        ListNode temp = head;
+        int i, row = 0, col = 0;
+        int rowlen = matrix.length;
+        int colLen = matrix[0].length;
+
+        while (row < rowlen && col < colLen) {
+            // Print the first row from the remaining rows
+//            left
+            for (i = col; i < colLen; ++i) {
+                if (temp == null)
+                    break;
+                matrix[row][i] = temp.val;
+                temp = temp.next;
+                System.out.print(matrix[row][i] + " ");
+            }
+            row++;
+
+            // Print the last column from the remaining
+            // columns
+//            down
+            for (i = row; i < rowlen; ++i) {
+                matrix[i][colLen - 1] = temp.val;
+                temp = temp.next;
+                System.out.print(matrix[i][colLen - 1] + " ");
+            }
+            colLen--; //
+
+            // Print the last row from the remaining rows */
+//            Moving right
+            if (row < rowlen) {
+                for (i = colLen - 1; i >= col; --i) {
+                    matrix[rowlen - 1][i] = temp.val;
+                    temp = temp.next;
+                    System.out.print(matrix[rowlen - 1][i] + " ");
+                }
+                rowlen--;
+            }
+
+            // Print the first column from the remaining
+            // columns */
+//            Moving up
+            if (col < colLen) {
+                for (i = rowlen - 1; i >= row; --i) {
+                    matrix[i][col] = temp.val;
+                    temp = temp.next;
+                    System.out.print(matrix[i][col] + " ");
+                }
+                col++;
+            }
+
+        }
+        return matrix;
+
+
+    }
+
 
 }
