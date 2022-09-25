@@ -122,7 +122,7 @@ public class BinaryTree {
         return isSubTreeRec(root.left, subtree) || isSubTreeRec(root.right, subtree);
     }
 
-    private void preOrderDisplay() {
+    public void preOrderDisplay() {
         preOrderDisplayRec(root);
     }
 
@@ -221,10 +221,11 @@ public class BinaryTree {
 
     public static void main(String[] args) {
 //        [3,4,5,1,2]
-        BinaryTree binaryTree  = new BinaryTree();
-        System.out.println(  binaryTree.catalanNum(3));
+        BinaryTree binaryTree = new BinaryTree();
 
-            }
+        binaryTree.reverseOddLevels();
+        binaryTree.levelOrderDisplay();
+    }
 
     private int sumOfNodesAtLength(int k) {
         if (root == null) return 0;
@@ -731,7 +732,6 @@ public class BinaryTree {
     }
 
 
-
     private int sumRootToLeafRec(TreeNode root, int current) {
         if (root == null) {
             return 0;
@@ -749,25 +749,47 @@ public class BinaryTree {
 
     public boolean checkTree(TreeNode root) {
         if (root == null) return false;
-        if (root.left == null && root.right ==null){
+        if (root.left == null && root.right == null) {
             return false;
         }
 
-        if (root.left == null || root.right ==null){
+        if (root.left == null || root.right == null) {
             return false;
         }
 
-        return (root.val == root.left.val +root.right.val);
+        return (root.val == root.left.val + root.right.val);
+
+    }
+
+    public TreeNode reverseOddLevels() {
+        return reverseOddLevels(root);
+    }
+
+    public TreeNode reverseOddLevels(TreeNode root) {
+        dfs(root.left, root.right, true);
+        return root;
+    }
+
+    private void dfs(TreeNode left, TreeNode right, boolean isOdd) {
+        if (left == null)
+            return;
+        if (isOdd) {
+            int temp = left.val;
+            left.val = right.val;
+            right.val = temp;
+        }
+        dfs(left.left, right.right, !isOdd);
+        dfs(left.right, right.left, !isOdd);
 
     }
 
     public int catalanNum(int n) {
-        int[] dp = new int[n+1];
-        dp[0] =1;
-        dp[1]=1;
-        for(int i=2; i<= n; i++){
-            for(int j=1; j<=i;j++) // take j as root, j-1 nodes form left subtree, i-j nodes forms right subtree.
-                dp[i] = dp[i]+ dp[j-1] * dp[i-j];
+        int[] dp = new int[n + 1];
+        dp[0] = 1;
+        dp[1] = 1;
+        for (int i = 2; i <= n; i++) {
+            for (int j = 1; j <= i; j++) // take j as root, j-1 nodes form left subtree, i-j nodes forms right subtree.
+                dp[i] = dp[i] + dp[j - 1] * dp[i - j];
         }
         return dp[n];
     }

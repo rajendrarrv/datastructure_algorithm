@@ -1,10 +1,15 @@
 package com.rajendra.practice.exculsive;
 
+import com.rajendra.collection.BinaryTree;
 import com.rajendra.collection.LinkedListImpl;
 import com.rajendra.model.ListNode;
+import com.rajendra.model.TreeNode;
 import com.rajendra.practice.leetcode.LeLinkList;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
 
 /**
  * Created by Rajendra Verma on 20/09/22.
@@ -105,32 +110,103 @@ public class LeetCodeDailyCallenge {
 
     }
 
+    public int concatenatedBinary(int n) {
+        int MOD = (int) 1_000_000_007;
+        StringBuilder sb = new StringBuilder();
+        for (int i = 1; i <= n; i++) {
+
+            sb.append(Integer.toBinaryString(i));
+
+        }
+        System.out.println(sb);
+        long result = convertBinaryToDecimal(sb);
+        return (int) (result % MOD);
+    }
+
+
+    public String turing(String s) {
+        String[] colorIndex = s.split(" ");
+        HashMap<Integer, String> map = new HashMap<>();
+        for (int i = 0; i < colorIndex.length; i++) {
+
+            String src = colorIndex[i];
+
+//            red2 blue5 black4 green1 gold3
+            char numberchar = src.charAt(src.length() - 1);
+            int number = numberchar - '0';
+            String word = src.substring(0, src.length() - 1);
+            map.put(number, word);
+
+
+        }
+        StringBuilder res = new StringBuilder();
+
+        for (int i = 1; i <= colorIndex.length; i++) {
+
+            res.append(map.get(i) + " ");
+        }
+        System.out.println(res);
+        return res.toString();
+
+    }
+
+    public long convertBinaryToDecimal(StringBuilder num) {
+        long decimalNumber = 0;
+        StringBuilder stringBuilder = num.reverse();
+        for (int i = 0; i < stringBuilder.length(); i++) {
+            int binary = -1;
+            if (stringBuilder.charAt(i) == '1') {
+                binary = 1;
+            } else {
+                binary = 0;
+            }
+            decimalNumber += Math.pow(2, i) * binary;
+        }
+        return decimalNumber;
+    }
+
+    int sum = 0;
+    List<List<Integer>> result = new ArrayList<>();
+
+    public List<List<Integer>> pathSum(TreeNode root, int targetSum) {
+        pathSumRec(root, new ArrayList<>(),targetSum);
+        return result;
+    }
+
+    public void pathSumRec(TreeNode node, ArrayList<Integer> list, int targetSum) {
+        if(node == null) return;
+        sum += node.val;
+        list.add(node.val);
+
+        if(node.left == null && node.right == null){
+            if(targetSum == sum){
+                sum =0;
+                result.add(list);
+            }else{
+                return;
+            }
+        }
+        if(node.left != null){
+            pathSumRec(node.left, new ArrayList<Integer>(list), targetSum);
+        }
+        if(node.right != null){
+            pathSumRec(node.right, new ArrayList<Integer>(list), targetSum);
+
+        }
+
+    }
+
+
 
     public static void main(String[] args) {
         LeetCodeDailyCallenge leetCodeDailyCallenge = new LeetCodeDailyCallenge();
 
+        int[] input = {5, 4, 11, 7, -1, -1, 2, -1, -1, 8, 13, -1, -1, 4, 5, -1, -1, 1, -1, -1};
+        BinaryTree binaryTree = new BinaryTree();
+        binaryTree.buildTree(input);
 
-//        Input: nums = [1,2,3,4], queries = [[1,0],[-3,1],[-4,0],[2,3]]
-//        Output: [8,6,2,4]
-//        Input: l1 = [2,4,3], l2 = [5,6,4]
+        leetCodeDailyCallenge.pathSum(binaryTree.root, 20);
 
 
-        LinkedListImpl linkedList = new LinkedListImpl();
-        linkedList.insertLast(9);
-        linkedList.insertLast(9);
-        linkedList.insertLast(9);
-        linkedList.insertLast(9);
-        linkedList.insertLast(9);
-        linkedList.insertLast(9);
-        linkedList.insertLast(9);
-
-        LinkedListImpl linkedList1 = new LinkedListImpl();
-        linkedList1.insertLast(9);
-        linkedList1.insertLast(9);
-        linkedList1.insertLast(9);
-        linkedList1.insertLast(9);
-
-        ListNode result = leetCodeDailyCallenge.addTwoNumbers(linkedList.head, linkedList1.head);
-        linkedList.display(result);
     }
 }

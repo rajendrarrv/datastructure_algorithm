@@ -4,6 +4,8 @@ import com.rajendra.model.ListNode;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -690,22 +692,14 @@ public class LinkedListImpl {
     public static void main(String[] args) {
         LinkedListImpl linkedList = new LinkedListImpl();
 //        3,0,2,6,8,1,7,9,4,2,5,5,0
-        linkedList.insertLast(3);
-        linkedList.insertLast(0);
-        linkedList.insertLast(2);
-        linkedList.insertLast(6);
-        linkedList.insertLast(8);
-        linkedList.insertLast(1);
-        linkedList.insertLast(7);
-        linkedList.insertLast(9);
-        linkedList.insertLast(4);
-        linkedList.insertLast(2);
-        linkedList.insertLast(5);
-        linkedList.insertLast(5);
-        linkedList.insertLast(0);
-        System.out.println(Arrays.toString(linkedList.spiralMatrix(3, 5)));
-        linkedList.display();
+        int s[] = {1,3,4,7,1,2,6};
+        for (int i = 0; i < s.length; i++) {
+            linkedList.insertLast(s[i]);
 
+        }
+
+        linkedList.deleteMiddle();
+        linkedList.display();
     }
 
     public int[][] spiralMatrix(int m, int n) {
@@ -768,5 +762,60 @@ public class LinkedListImpl {
 
     }
 
+    public void deleteDuplicates() {
+        this.head = deleteDuplicates(this.head);
 
+    }
+
+    public ListNode deleteMiddle() {
+        ListNode dummy = new ListNode(0, head);
+        ListNode slow = dummy;
+        ListNode fast = dummy;
+
+        while (fast.next != null && fast.next.next != null) {
+            slow = slow.next;
+            fast = fast.next.next;
+        }
+
+        // delete the middle node
+        slow.next = slow.next.next;
+        return dummy.next;
+    }
+
+    public ListNode deleteDuplicates(ListNode head) {
+
+
+        // Create a dummy node that acts like a fake
+        // head of list pointing to the original head
+        ListNode dummy = new ListNode(0);
+
+        // Dummy node points to the original head
+        dummy.next = head;
+        ListNode prev = dummy;
+        ListNode current = head;
+
+        while (current != null) {
+            // Until the current and previous values
+            // are same, keep updating current
+            while (current.next != null &&
+                    prev.next.val == current.next.val)
+                current = current.next;
+
+            // If current has unique value i.e current
+            // is not updated, Move the prev pointer
+            // to next node
+            if (prev.next == current)
+                prev = prev.next;
+
+                // When current is updated to the last
+                // duplicate value of that segment, make
+                // prev the next of current*/
+            else
+                prev.next = current.next;
+
+            current = current.next;
+        }
+
+        return dummy.next;
+    }
 }
