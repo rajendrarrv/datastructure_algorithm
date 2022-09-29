@@ -15,7 +15,7 @@ public class LinkListTest {
     @Before
     public  void  before(){
         System.out.println("Before");
-//        linkedList = new LinkedListImpl();
+        linkedList = new LinkedListImpl();
     }
     @After
     public  void  after(){
@@ -29,7 +29,5 @@ public class LinkListTest {
         System.out.println("Test");
         linkedList.insertLast(1);
         linkedList.insertLast(2);
-        linkedList.insertLast(3);
-        linkedList.insertLast(4);
     }
 }
