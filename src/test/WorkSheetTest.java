@@ -1,6 +1,7 @@
 package test;
 
 import com.rajendra.practice.apna.WorkSheet;
+import com.rajendra.practice.apna.WorkSheetArray;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -12,12 +13,12 @@ import java.util.List;
  * Created by Rajendra Verma on 25/09/22.
  */
 public class WorkSheetTest implements VTest {
-    WorkSheet sheet;
+    WorkSheetArray sheet;
 
     @Before
     @Override
     public void before() {
-        sheet = new WorkSheet();
+        sheet = new WorkSheetArray();
     }
 
     @Test
@@ -367,18 +368,7 @@ public class WorkSheetTest implements VTest {
 
 
 
-    @Test
-    public void mergeTest() {
 
-        int in[][] = {{1, 3}, {2, 6}, {8, 10}, {15, 18}};
-        WorkSheet sheet = new WorkSheet();
-        int [][] result =  sheet.merge(in);
-        for (int [] s : result
-        ) {
-            System.out.print(Arrays.toString(s)+" ");
-
-        }
-    }
 
 
     static int findMinOps(int[] arr, int n)
