@@ -8,8 +8,6 @@ import java.text.NumberFormat;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.Deque;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -124,7 +122,7 @@ public class BinaryTree {
         return isSubTreeRec(root.left, subtree) || isSubTreeRec(root.right, subtree);
     }
 
-    private void preOrderDisplay() {
+    public void preOrderDisplay() {
         preOrderDisplayRec(root);
     }
 
@@ -223,13 +221,10 @@ public class BinaryTree {
 
     public static void main(String[] args) {
 //        [3,4,5,1,2]
-        int rootData[] = {10, 5, 3, -1, -1, 7, -1, -1, 15, 18, -1, -1};
-        BinaryTree rootRoot = new BinaryTree();
-        rootRoot.buildTree(rootData);
-        System.out.println();
-        rootRoot.levelOrderDisplay();
-        System.out.println("Range =" + rootRoot.rangeSumBST(7, 15));
+        BinaryTree binaryTree = new BinaryTree();
 
+        binaryTree.reverseOddLevels();
+        binaryTree.levelOrderDisplay();
     }
 
     private int sumOfNodesAtLength(int k) {
@@ -737,7 +732,6 @@ public class BinaryTree {
     }
 
 
-
     private int sumRootToLeafRec(TreeNode root, int current) {
         if (root == null) {
             return 0;
@@ -755,16 +749,49 @@ public class BinaryTree {
 
     public boolean checkTree(TreeNode root) {
         if (root == null) return false;
-        if (root.left == null && root.right ==null){
+        if (root.left == null && root.right == null) {
             return false;
         }
 
-        if (root.left == null || root.right ==null){
+        if (root.left == null || root.right == null) {
             return false;
         }
 
-        return (root.val == root.left.val +root.right.val);
+        return (root.val == root.left.val + root.right.val);
 
+    }
+
+    public TreeNode reverseOddLevels() {
+        return reverseOddLevels(root);
+    }
+
+    public TreeNode reverseOddLevels(TreeNode root) {
+        dfs(root.left, root.right, true);
+        return root;
+    }
+
+    private void dfs(TreeNode left, TreeNode right, boolean isOdd) {
+        if (left == null)
+            return;
+        if (isOdd) {
+            int temp = left.val;
+            left.val = right.val;
+            right.val = temp;
+        }
+        dfs(left.left, right.right, !isOdd);
+        dfs(left.right, right.left, !isOdd);
+
+    }
+
+    public int catalanNum(int n) {
+        int[] dp = new int[n + 1];
+        dp[0] = 1;
+        dp[1] = 1;
+        for (int i = 2; i <= n; i++) {
+            for (int j = 1; j <= i; j++) // take j as root, j-1 nodes form left subtree, i-j nodes forms right subtree.
+                dp[i] = dp[i] + dp[j - 1] * dp[i - j];
+        }
+        return dp[n];
     }
 }
 

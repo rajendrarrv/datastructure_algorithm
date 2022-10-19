@@ -144,15 +144,18 @@ public class Graph {
 
     public void bfsTraversal(int source) {
         Map<Integer, Boolean> visited = new HashMap<>();
-        LinkedList<Node> queue = new LinkedList<>();
+        Queue<Node> queue = new LinkedList<>();
         visited.put(source, true);
+
         queue.add(getNode(source));
         while (!queue.isEmpty()) {
             Node disPlayNode = queue.poll();
+//            visting of node
             System.out.print(disPlayNode.id + "->");
             Iterator<Node> i = disPlayNode.neighbors.listIterator();
             while (i.hasNext()) {
                 Node next = i.next();
+//                exploring of node
                 if (!visited.getOrDefault(next.id, false)) {
                     visited.put(next.id, true);
                     queue.add(next);
